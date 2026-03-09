@@ -1,7 +1,7 @@
 
-import { Request, Response } from 'express';
+import express from 'express'
 
 // POST
-export const createOrder = (req: Request, res: Response) => {
+export const createOrder = (req: express.Request, res: express.Response) => {
     res.status(201).json({ message: "TESTING: Create order" });
 };
