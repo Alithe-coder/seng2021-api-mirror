@@ -1,0 +1,10 @@
+image: node:latest
+
+stages:
+  - check
+
+typescript_check:
+  stage: check
+  script:
+    - npm install
+    - npx tsc --noEmit
