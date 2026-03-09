@@ -7,5 +7,9 @@ import express from 'express'
 
 // create an order
 export const createOrder = (req: express.Request, res: express.Response) => {
-    res.status(201).json({ message: "TESTING: Create order" });
+    // receive the data from terminal: req.body
+    const dataReceived = req.body;
+    console.log(dataReceived)
+
+    res.status(201).json({ message: "TESTING: Create order", data: dataReceived });
 };

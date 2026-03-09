@@ -7,6 +7,9 @@ import orderRoutes from './routes/orderRoutes.ts';
 const app = express();
 const port = 3000;
 
+// we need to ensure that our server can actuall read JSON
+app.use(express.json());
+
 // we need to use /api/v1/orders everytime we are to do with orders
 app.use('/api/v1/orders', orderRoutes);
 
