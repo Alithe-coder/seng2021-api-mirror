@@ -5,11 +5,43 @@
 
 import express from 'express'
 
-// create an order
+// this will be the sort of skeleton code for the rest of the controllers
+// POST /api/v1/orders - Create
 export const createOrder = (req: express.Request, res: express.Response) => {
     // receive the data from terminal: req.body
     const dataReceived = req.body;
     console.log(dataReceived)
 
     res.status(201).json({ message: "TESTING: Create order", data: dataReceived });
+};
+
+// GET /api/v1/orders - List orders using filters
+export const listOrders = (req: express.Request, res: express.Response) => {
+    const filters = req.query;
+    res.status(200).json({ message: "List orders", filters: filters });
+};
+
+
+// GET /api/v1/orders/:orderId - Retreive
+export const getOrderById = (req: express.Request, res: express.Response) => {
+    const { orderId } = req.params;
+    res.status(200).json({ message: `Order to be retrieved ${orderId}`});
+};
+
+// PUT /api/v1/orders/:orderId - update
+export const updateOrder = (req: express.Request, res: express.Response) => {
+    const { orderId } = req.params;
+    res.status(200).json({ message: `Order to be retrieved ${orderId}`});
+};
+
+// DELETE /api/v1/orders/:orderId - Delete
+export const deleteOrder = (req: express.Request, res: express.Response) => {
+    //const { orderId } = req.params;
+    res.status(204).send();
+};
+
+// GET /api/v1/orders/:orderId/ubl - Export XML
+export const generateUbl = (req: express.Request, res: express.Response) => {
+    const { orderId } = req.params;
+    res.status(200).send(`<Order><ID>${orderId}</ID><Status>Skeleton</Status></Order>`);
 };
