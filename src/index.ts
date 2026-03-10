@@ -1,8 +1,9 @@
 
-// index.ts is the main file which will run everytime the Node server starts. ALl 
+// index.ts is the main file which will run everytime the Node server starts.
 
 import express from 'express';
 import orderRoutes from './routes/orderRoutes.ts';
+import { errorHandler } from './middleware/errorHandler.ts'
 
 const app = express();
 const port = 3000;
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use('/api/v1/orders', orderRoutes);
 
 // health check to see how the server is going 
-app.get('/api/v1/health', (req, res) => {
+app.get('/api/v1/health', (req: express.Request, res: express.Response) => {
     res.status(200).json({
         status : {
             indicator: "<placeholder>",
@@ -28,6 +29,8 @@ app.get('/api/v1/health', (req, res) => {
     })
 });
 
+// this MUST be after any routes
+app.use(errorHandler);
 
 // when server is running
 app.listen(port, () => {

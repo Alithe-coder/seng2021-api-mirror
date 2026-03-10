@@ -3,7 +3,9 @@
 // for executing code depending on what it receives. its essentially the backend functionality
 // for api endpoints
 
-import express from 'express'
+import express from 'express';
+
+import type { AppError } from '../middleware/errorHandler.ts';
 
 // this will be the sort of skeleton code for the rest of the controllers
 // POST /api/v1/orders - Create
@@ -28,7 +30,7 @@ export const getOrderById = (req: express.Request, res: express.Response, next: 
 
     // test
     if (orderId === "37") {
-        const err: any = new Error("No order exists with the provided ID");
+        const err: AppError = new Error("No order exists with the provided ID");
         err.type = "NOT_FOUND"; // This tells the middleware to use status 404
         
         return next(err); // Teleport to the Error Handler!
