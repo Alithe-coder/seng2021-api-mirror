@@ -15,7 +15,17 @@ app.use('/api/v1/orders', orderRoutes);
 
 // health check to see how the server is going 
 app.get('/api/v1/health', (req, res) => {
-    res.status(200).json({status : "healthy 🫀   "})
+    res.status(200).json({
+        status : {
+            indicator: "<placeholder>",
+            description: "<placeholder>"
+        },
+        services: {
+            "vercel": "<placeholder>",
+        },
+        version : "1.0",
+        uptimeSeconds: Math.floor(process.uptime())
+    })
 });
 
 
