@@ -57,6 +57,7 @@ function createOrderInterface(order: string): Order {
   return JSON.parse(order);
 }
 
+// this function converts a Typescript interface to JSON, so that the API can send it to the client
 function createOrderJSON(order: Order): string {
   return JSON.stringify(order);
 }
