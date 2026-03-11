@@ -1,7 +1,7 @@
 import type { BuyerCustomerParty, SellerSupplierParty } from "./UBLUniversal.ts";
 
 export interface OrderCancel {
-    orderDate: Date;
+    cancelDate: Date;
     cancelationNote: String;
     buyer: BuyerCustomerParty;
     seller: SellerSupplierParty;
