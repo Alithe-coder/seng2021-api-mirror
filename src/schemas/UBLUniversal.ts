@@ -1,10 +1,3 @@
-export interface Item {
-  sellerId: string;
-  itemDescription: String;
-  itemName: String;
-  itemPrice: number;
-}
-
 export interface BuyerCustomerParty {
   buyerId: string;
   owner: Person

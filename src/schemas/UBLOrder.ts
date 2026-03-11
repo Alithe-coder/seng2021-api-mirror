@@ -1,4 +1,12 @@
-import type { Item, BuyerCustomerParty, Address, Person, SellerSupplierParty } from "./UBLUniversal.ts";
+import type { BuyerCustomerParty, SellerSupplierParty } from "./UBLUniversal.ts";
+
+export interface Item {
+  sellerId: string;
+  itemDescription: String;
+  itemName: String;
+  itemPrice: number;
+}
+
 
 export interface Order {
   orderId: String;
