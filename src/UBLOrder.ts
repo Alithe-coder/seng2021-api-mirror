@@ -53,6 +53,10 @@ export interface Contact {
 }
 
 // This function parses a JSON UBL file, so that the database can read it 
-function createOrderInterface(ublOrderString: string): Order {
-  return JSON.parse(ublOrderString);
+function createOrderInterface(order: string): Order {
+  return JSON.parse(order);
+}
+
+function createOrderJSON(order: Order): string {
+  return JSON.stringify(order);
 }
