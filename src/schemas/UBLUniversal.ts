@@ -36,3 +36,9 @@ export interface Address {
   suburbName: string;
   stateName: string;
 }
+
+export interface SellerSupplierParty {
+  companyId: String;
+  sellerAddress: Address;
+  seller: Person;
+}

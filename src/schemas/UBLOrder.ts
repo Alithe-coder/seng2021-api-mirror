@@ -1,17 +1,12 @@
-import type { Item, BuyerCustomerParty, Address, Person } from "./UBLUniversal.ts";
+import type { Item, BuyerCustomerParty, Address, Person, SellerSupplierParty } from "./UBLUniversal.ts";
 
 export interface Order {
   orderId: String;
   orderDate: Date;
   UBLVersion: String;
   buyer: BuyerCustomerParty;
+  seller: SellerSupplierParty;
   item: Item[];
-}
-
-export interface SellerSupplierParty {
-  companyId: String;
-  sellerAddress: Address;
-  seller: Person;
 }
 
 // This function parses a JSON UBL file, so that the database can read it 
