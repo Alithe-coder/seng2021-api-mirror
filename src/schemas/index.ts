@@ -2,7 +2,7 @@
 // index.ts is the main file which will run everytime the Node server starts. ALl 
 
 import express from 'express';
-import orderRoutes from './routes/orderRoutes.ts';
+import orderRoutes from '../routes/orderRoutes.ts';
 
 const app = express();
 const port = 3000;
