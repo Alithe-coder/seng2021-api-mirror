@@ -21,15 +21,6 @@ datasource db {
 }
 
 
-model Order {
-  id        String   @id @default(uuid())
-  buyerName String
-  item      String
-  quantity  Int
-  status    String   @default("DRAFT")
-  createdAt DateTime @default(now())
-}
-
 model Address {
   id      String @id @default(uuid())
   street  Int
@@ -67,6 +58,8 @@ model BuyerCustomerParty {
 
   address Address @relation(fields: [addressId], references: [id])
   addressId String @unique
+
+  order Order?
 }
 
 model SellerCustomerParty {
@@ -79,4 +72,57 @@ model SellerCustomerParty {
 
   address Address @relation(fields: [addressId], references: [id])
   addressId String @unique
+
+  order Order?
+}
+
+model Item {
+  id      String @id @default(uuid())
+  itemDescription String
+  itemName  String
+  itemPrice Int
+}
+
+model Order {
+  id      String @id @default(uuid())
+  orderDate DateTime
+  buyer BuyerCustomerParty @relation(fields: [buyerId], references: [id])
+  buyerId String @unique
+  seller SellerCustomerParty @relation(fields: [sellerId], references: [id])
+  sellerId String @unique
+  orderChange OrderChange?
+
+}
+
+model OrderChange {
+  id      String @id @default(uuid())
+  changeReason  String
+  changeDescription String
+  order Order @relation(fields: [orderId], references: [id])
+  orderId String @unique
+}
+
+model OrderCancel {
+  id      String @id @default(uuid())
+
+  buyer BuyerCustomerParty @relation(fields: [buyerId], references: [id])
+  buyerId String @unique
+
+  seller SellerCustomerParty @relation(fields: [sellerId], references: [id])
+  sellerId String @unique
+
+  cancelNote String
+  cancelDate DateTime
+}
+
+model OrderResponseSimple {
+  id      String @id @default(uuid())
+
+  buyer BuyerCustomerParty @relation(fields: [buyerId], references: [id])
+  buyerId String @unique
+
+  seller SellerCustomerParty @relation(fields: [sellerId], references: [id])
+  sellerId String @unique
+
+  acceptedIndicator Boolean
 }
