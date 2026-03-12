@@ -6,6 +6,7 @@ import orderRoutes from './routes/orderRoutes.ts';
 import { errorHandler } from './middleware/errorHandler.ts'
 
 const app = express();
+app.set('json spaces', 2);
 const port = 3000;
 
 // we need to ensure that our server can actuall read JSON

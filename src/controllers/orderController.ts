@@ -4,16 +4,25 @@
 // for api endpoints
 
 import express from 'express';
-
 import type { AppError } from '../middleware/errorHandler.ts';
 import { prisma } from '../db.ts';
 
+import { validateCreateOrder } from '../utils/orderValidation.ts';
+
 // this will be the sort of skeleton code for the rest of the controllers
 // POST /api/v1/orders - Create
-export const createOrder = async (req: express.Request, res: express.Response) => {
+export const createOrder = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     // receive the data from terminal: req.body
-    const dataReceived = req.body;
-    console.log(dataReceived);
+    const validaitonErrors= validateCreateOrder(req.body);
+    
+    // error occured
+    if (validaitonErrors.length > 0) {
+        const err: AppError = new Error("Invalid order data provided");
+        err.type = "VALIDATION_ERROR";
+        err.details = validaitonErrors;
+
+        return next(err);
+    }
 
     const newOrder = await prisma.order.create({
         data: {
