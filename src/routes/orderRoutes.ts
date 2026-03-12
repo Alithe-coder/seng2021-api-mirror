@@ -29,4 +29,6 @@ router.delete('/:orderId', orderController.deleteOrder);
 // GET /api/v1/orders/:orderId/ubl - Export XML
 router.post('/:orderId/ubl', orderController.generateUbl);
 
+router.post('/:sellerId', orderController.createSellerParty);
+
 export default router;
