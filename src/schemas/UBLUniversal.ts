@@ -2,15 +2,14 @@ export interface BuyerCustomerParty {
   buyerId: string;
   owner: Person
   buyerAddress: Address;
+  contactinfo: Contact;
 }
 
 export interface Person {
-  personId: String;
+  personId: string;
   firstName: string;
   surname: string;
-  phoneNo: number;
-  jobTitle: String;
-  contactinfo: Contact
+  jobTitle: string;
   
 }
 
@@ -22,16 +21,17 @@ export interface Contact {
 }
 
 export interface Address {
-  AddressId: String;
+  AddressId: string;
   streetNo: number;
-  streetName: String;
+  streetName: string;
   postCode: number;
   suburbName: string;
   stateName: string;
 }
 
 export interface SellerSupplierParty {
-  companyId: String;
+  companyId: string;
   sellerAddress: Address;
   seller: Person;
+  contactinfo: Contact
 }

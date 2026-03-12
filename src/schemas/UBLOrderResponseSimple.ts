@@ -1,4 +1,4 @@
-import type { BuyerCustomerParty, Address, Person, SellerSupplierParty } from "./UBLUniversal.ts";
+import type { BuyerCustomerParty, SellerSupplierParty } from "./UBLUniversal.ts";
 
 
 export interface OrderResponseSimple {

@@ -2,16 +2,16 @@ import type { BuyerCustomerParty, SellerSupplierParty } from "./UBLUniversal.ts"
 
 export interface Item {
   sellerId: string;
-  itemDescription: String;
-  itemName: String;
+  itemDescription: string;
+  itemName: string;
   itemPrice: number;
 }
 
 
 export interface Order {
-  orderId: String;
+  orderId: string;
   orderDate: Date;
-  UBLVersion: String;
+  UBLVersion: string;
   buyer: BuyerCustomerParty;
   seller: SellerSupplierParty;
   item: Item[];

@@ -12,10 +12,12 @@
 // npx prisma db push : update structure of database
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"  // Required
 }
 
 datasource db {
   provider = "postgresql"
+  url = "postgresql://neondb_owner:npg_QOSDKi63ZJUR@ep-falling-boat-a7x69krr-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 }
 
 
@@ -26,4 +28,39 @@ model Order {
   quantity  Int
   status    String   @default("DRAFT")
   createdAt DateTime @default(now())
+}
+
+model Address {
+  id      String @id @default(uuid())
+  street  Int
+  streetName    String
+  postCode  Int
+  suburbName  String
+  stateName   String
+}
+
+model Contact {
+  id  String@id @default(uuid())
+  phoneNo Int
+  telefax Int
+  email String
+  buyer BuyerCustomerParty?
+}
+
+model Person {
+  id  String@id @default(uuid())
+  firstName String
+  surname String
+  jobTitle  String
+
+}
+
+model BuyerCustomerParty {
+  id      String @id @default(uuid())
+
+  contact Contact @relation(fields: [contactId], references: [id])
+  contactId String @unique
+  person Person @relation(fields: [personId], references: [id])
+  per
+
 }
