@@ -4,8 +4,11 @@ image: node:latest
 stages:
   - check
 
+
 typescript_check:
   stage: check
   script:
-    - npm install
+    - npm ci
+    - DATABASE_URL="postgresql://dummy:dummy@dummy/dummy" npx prisma generate
     - npx tsc --noEmit
+    

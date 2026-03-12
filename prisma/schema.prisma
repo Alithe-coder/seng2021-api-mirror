@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// prisma/schema.prisma
+
+
+
+// HOW TO USE
+// npx prisma db push : update structure of database
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Order {
+  id        String   @id @default(uuid())
+  buyerName String
+  item      String
+  quantity  Int
+  status    String   @default("DRAFT")
+  createdAt DateTime @default(now())
+}

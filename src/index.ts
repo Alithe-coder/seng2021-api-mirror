@@ -1,6 +1,6 @@
 
-// index.ts is the main file which will run everytime the Node server starts.
-
+// index.ts is the main file which will run everytime the Node server starts. ALl 
+import 'dotenv/config';
 import express from 'express';
 import orderRoutes from './routes/orderRoutes.ts';
 import { errorHandler } from './middleware/errorHandler.ts'
