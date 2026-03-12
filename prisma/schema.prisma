@@ -6,123 +6,126 @@
 
 // prisma/schema.prisma
 
-
-
 // HOW TO USE
 // npx prisma db push : update structure of database
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"  // Required
+  output   = "../src/generated/prisma" // Required
 }
 
 datasource db {
   provider = "postgresql"
-  url = "postgresql://neondb_owner:npg_QOSDKi63ZJUR@ep-falling-boat-a7x69krr-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+  url      = "postgresql://neondb_owner:npg_QOSDKi63ZJUR@ep-falling-boat-a7x69krr-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 }
 
-
 model Address {
-  id      String @id @default(uuid())
-  street  Int
-  streetName    String
-  postCode  Int
-  suburbName  String
-  stateName   String
-  buyer BuyerCustomerParty?
+  id                  String               @id @default(uuid())
+  street              Int
+  streetName          String
+  postCode            Int
+  suburbName          String
+  stateName           String
+  buyer               BuyerCustomerParty?
+  sellerCustomerParty SellerCustomerParty?
 }
 
 model Contact {
-  id  String@id @default(uuid())
-  phoneNo Int
-  telefax Int
-  email String
-  buyer BuyerCustomerParty?
+  id                  String               @id @default(uuid())
+  phoneNo             Int
+  telefax             Int
+  email               String
+  buyer               BuyerCustomerParty?
+  sellerCustomerParty SellerCustomerParty?
 }
 
 model Person {
-  id  String@id @default(uuid())
+  id        String              @id @default(uuid())
   firstName String
-  surname String
+  surname   String
   jobTitle  String
-  buyer BuyerCustomerParty? 
+  buyer     BuyerCustomerParty?
 
+  sellerCustomerParty SellerCustomerParty?
 }
 
 model BuyerCustomerParty {
-  id      String @id @default(uuid())
+  id String @id @default(uuid())
 
-  contact Contact @relation(fields: [contactId], references: [id])
-  contactId String @unique
-  person Person @relation(fields: [personId], references: [id])
-  personId  String @unique
+  contact   Contact @relation(fields: [contactId], references: [id])
+  contactId String  @unique
+  person    Person  @relation(fields: [personId], references: [id])
+  personId  String  @unique
 
-  address Address @relation(fields: [addressId], references: [id])
-  addressId String @unique
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String  @unique
 
-  order Order?
+  order               Order?
+  orderCancel         OrderCancel?
+  orderResponseSimple OrderResponseSimple?
 }
 
 model SellerCustomerParty {
-  id      String @id @default(uuid())
+  id String @id @default(uuid())
 
-  contact Contact @relation(fields: [contactId], references: [id])
-  contactId String @unique
-  person Person @relation(fields: [personId], references: [id])
-  personId  String @unique
+  contact   Contact @relation(fields: [contactId], references: [id])
+  contactId String  @unique
+  person    Person  @relation(fields: [personId], references: [id])
+  personId  String  @unique
 
-  address Address @relation(fields: [addressId], references: [id])
-  addressId String @unique
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String  @unique
 
-  order Order?
+  order               Order?
+  orderCancel         OrderCancel?
+  orderResponseSimple OrderResponseSimple?
 }
 
 model Item {
-  id      String @id @default(uuid())
+  id              String @id @default(uuid())
   itemDescription String
-  itemName  String
-  itemPrice Int
+  itemName        String
+  itemPrice       Int
 }
 
 model Order {
-  id      String @id @default(uuid())
-  orderDate DateTime
-  buyer BuyerCustomerParty @relation(fields: [buyerId], references: [id])
-  buyerId String @unique
-  seller SellerCustomerParty @relation(fields: [sellerId], references: [id])
-  sellerId String @unique
+  id          String              @id @default(uuid())
+  orderDate   DateTime
+  buyer       BuyerCustomerParty  @relation(fields: [buyerId], references: [id])
+  buyerId     String              @unique
+  seller      SellerCustomerParty @relation(fields: [sellerId], references: [id])
+  sellerId    String              @unique
   orderChange OrderChange?
-
 }
 
 model OrderChange {
-  id      String @id @default(uuid())
-  changeReason  String
+  id                String @id @default(uuid())
+  changeReason      String
   changeDescription String
-  order Order @relation(fields: [orderId], references: [id])
-  orderId String @unique
+  order             Order  @relation(fields: [orderId], references: [id])
+  orderId           String @unique
 }
 
 model OrderCancel {
-  id      String @id @default(uuid())
+  id String @id @default(uuid())
 
-  buyer BuyerCustomerParty @relation(fields: [buyerId], references: [id])
-  buyerId String @unique
+  buyer   BuyerCustomerParty @relation(fields: [buyerId], references: [id])
+  buyerId String             @unique
 
-  seller SellerCustomerParty @relation(fields: [sellerId], references: [id])
-  sellerId String @unique
+  seller   SellerCustomerParty @relation(fields: [sellerId], references: [id])
+  sellerId String              @unique
 
   cancelNote String
   cancelDate DateTime
 }
 
 model OrderResponseSimple {
-  id      String @id @default(uuid())
+  id String @id @default(uuid())
 
-  buyer BuyerCustomerParty @relation(fields: [buyerId], references: [id])
-  buyerId String @unique
+  buyer   BuyerCustomerParty @relation(fields: [buyerId], references: [id])
+  buyerId String             @unique
 
-  seller SellerCustomerParty @relation(fields: [sellerId], references: [id])
-  sellerId String @unique
+  seller   SellerCustomerParty @relation(fields: [sellerId], references: [id])
+  sellerId String              @unique
 
   acceptedIndicator Boolean
 }

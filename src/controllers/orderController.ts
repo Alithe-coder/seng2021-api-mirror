@@ -24,6 +24,34 @@ export const createOrder = async (req: express.Request, res: express.Response) =
     res.status(201).json(newOrder);
 };
 
+export const createSellerParty = async (req: express.Request, res: express.Response) => {
+    const dataReceived = req.body;
+    console.log(dataReceived);
+
+    const newSeller = await prisma.SellerSupplierParty.create({
+        data: {
+            address: {
+                street: req.body.streetNo,
+                streetName: req.body.streetName,
+                postCode: req.body.postCode,
+                suburbName: req.body.suburbName,
+                stateName: req.body.stateName,
+            },
+            contact: {
+                phoneNo: req.body.phoneNo,
+                telefax: req.body.telefax,
+                email: req.body.email
+            },
+            person: {
+                firstName: req.body.firstName,
+                surname: req.body.surname,
+                jobTitle: req.body.jobTitle
+            }
+        }
+    })
+    res.status(201).json(newSeller);
+}
+
 // GET /api/v1/orders - List orders using filters
 export const listOrders = (req: express.Request, res: express.Response) => {
     const filters = req.query;
