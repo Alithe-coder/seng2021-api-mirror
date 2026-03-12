@@ -20,10 +20,10 @@ model Order {
 */
 
 const orderSchema = z.object({
-    buyerName: z.string({required_error: "buyerName is required"}),
-    item: z.string({required_error: "item is required"}),
+    buyerName: z.string({message: "buyerName is required"}),
+    item: z.string({message: "item is required"}),
 
-    quantity: z.number({required_error: "quantity is required"})
+    quantity: z.number({message: "quantity is required"})
         .int("quantity must be integer")
         .positive("quantity must be greater than 0"),
 
