@@ -3,16 +3,25 @@
 // for executing code depending on what it receives. its essentially the backend functionality
 // for api endpoints
 
-import express from 'express'
+import express from 'express';
+import { prisma } from '../db.ts';
 
 // this will be the sort of skeleton code for the rest of the controllers
 // POST /api/v1/orders - Create
-export const createOrder = (req: express.Request, res: express.Response) => {
+export const createOrder = async (req: express.Request, res: express.Response) => {
     // receive the data from terminal: req.body
     const dataReceived = req.body;
-    console.log(dataReceived)
+    console.log(dataReceived);
 
-    res.status(201).json({ message: "TESTING: Create order", data: dataReceived });
+    const newOrder = await prisma.order.create({
+        data: {
+            buyerName: req.body.buyerName,
+            item: req.body.item,
+            quantity: req.body.quantity
+        }
+    })
+
+    res.status(201).json(newOrder);
 };
 
 // GET /api/v1/orders - List orders using filters
