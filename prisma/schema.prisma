@@ -37,6 +37,7 @@ model Address {
   postCode  Int
   suburbName  String
   stateName   String
+  buyer BuyerCustomerParty?
 }
 
 model Contact {
@@ -52,6 +53,7 @@ model Person {
   firstName String
   surname String
   jobTitle  String
+  buyer BuyerCustomerParty? 
 
 }
 
@@ -61,6 +63,20 @@ model BuyerCustomerParty {
   contact Contact @relation(fields: [contactId], references: [id])
   contactId String @unique
   person Person @relation(fields: [personId], references: [id])
-  per
+  personId  String @unique
 
+  address Address @relation(fields: [addressId], references: [id])
+  addressId String @unique
+}
+
+model SellerCustomerParty {
+  id      String @id @default(uuid())
+
+  contact Contact @relation(fields: [contactId], references: [id])
+  contactId String @unique
+  person Person @relation(fields: [personId], references: [id])
+  personId  String @unique
+
+  address Address @relation(fields: [addressId], references: [id])
+  addressId String @unique
 }
