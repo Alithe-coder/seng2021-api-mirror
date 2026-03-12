@@ -4,8 +4,11 @@ image: node:latest
 stages:
   - check
 
+
 typescript_check:
   stage: check
   script:
-    - npm install
+    - npm ci
+    - npx prisma generate
     - npx tsc --noEmit
+    
