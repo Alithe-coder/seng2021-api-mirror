@@ -27,7 +27,7 @@ export const errorHandler = (
     err: AppError, req: express.Request,
     res: express.Response,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    next: NextFunction) => { // we need next to actually ensure the program continues running
+    next: express.NextFunction) => { // we need next to actually ensure the program continues running
     // assume error status is 500 (internal server error)
     let status = err.status || 500;
     let code = "INTERNAL_SERVER_ERROR";
