@@ -9,6 +9,6 @@ typescript_check:
   stage: check
   script:
     - npm ci
-    - npx prisma generate
+    - DATABASE_URL="postgresql://dummy:dummy@dummy/dummy" npx prisma generate
     - npx tsc --noEmit
     
