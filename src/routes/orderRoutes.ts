@@ -11,7 +11,30 @@ const router = Router();
 
 // e.g. evertime we do curl -X POST http://localhost:3000/api/v1/orders, orderController.createOrder
 
-// POST /api/v1/orders - Create
+/**
+ * @openapi
+ * /api/v1/orders:
+ *   post:
+ *     summary: Create a new order
+ *     tags:
+ *       - Orders
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               buyerName:
+ *                 type: string
+ *               item:
+ *                 type: string
+ *               quantity:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Order created successfully
+ */
 router.post('/', orderController.createOrder);
 
 // GET /api/v1/orders - List orders
