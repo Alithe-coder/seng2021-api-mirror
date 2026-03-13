@@ -1,4 +1,5 @@
-import type { BuyerCustomerParty, Address, Person, SellerSupplierParty } from "./UBLUniversal.ts";
+// commented Address, Person since they were unused
+import type { BuyerCustomerParty, SellerSupplierParty } from "./UBLUniversal.ts";
 
 
 export interface OrderResponseSimple {
