@@ -15,7 +15,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  //url      = env("DATABASE_URL")
+  url      = "postgresql://neondb_owner:npg_QOSDKi63ZJUR@ep-falling-boat-a7x69krr-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 }
 
 model Address {
@@ -36,6 +36,10 @@ model Contact {
   email               String
   buyer               BuyerCustomerParty?
   sellerCustomerParty SellerCustomerParty?
+}
+model Test {
+  id  String @id @default(uuid())
+  name  String
 }
 
 model Person {
