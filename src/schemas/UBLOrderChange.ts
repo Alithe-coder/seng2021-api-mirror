@@ -3,8 +3,8 @@ import type { Order } from './UBLOrder.ts'
 
 export interface OrderChange {
     order: Order;
-    changeReason: String;
-    changeDescription: String;
+    changeReason: string;
+    changeDescription: string;
 }
 
 // This function parses a JSON UBL file, so that the database can read it 

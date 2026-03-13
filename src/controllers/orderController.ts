@@ -4,7 +4,7 @@
 // for api endpoints
 
 import express from 'express';
-import { prisma } from '../db.ts';
+// import { prisma } from '../db.ts';
 
 // this will be the sort of skeleton code for the rest of the controllers
 // POST /api/v1/orders - Create
@@ -13,6 +13,7 @@ export const createOrder = async (req: express.Request, res: express.Response) =
     const dataReceived = req.body;
     console.log(dataReceived);
 
+    /*
     const newOrder = await prisma.order.create({
         data: {
             buyerName: req.body.buyerName,
@@ -20,6 +21,13 @@ export const createOrder = async (req: express.Request, res: express.Response) =
             quantity: req.body.quantity
         }
     })
+    */
+   const newOrder = {
+        id: 1,
+        buyerName: req.body.buyerName,
+        item: req.body.item,
+        quantity: req.body.quantity
+    };
 
     res.status(201).json(newOrder);
 };
