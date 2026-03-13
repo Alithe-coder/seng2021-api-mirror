@@ -82,6 +82,8 @@ model SellerCustomerParty {
   order               Order?
   orderCancel         OrderCancel?
   orderResponseSimple OrderResponseSimple?
+
+  items Item[]
 }
 
 model Item {
