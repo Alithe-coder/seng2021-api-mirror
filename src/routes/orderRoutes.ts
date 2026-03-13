@@ -29,11 +29,13 @@ router.delete('/:orderId', orderController.deleteOrder);
 // GET /api/v1/orders/:orderId/ubl - Export XML
 router.post('/:orderId/ubl', orderController.generateUbl);
 // POST api/v1/orders/seller/sellerId
-router.post('/seller/:sellerId', orderController.createSellerParty);
+router.post('/seller/new', orderController.createSellerParty);
 // POST api/v1/orders/buyer/buyerId
-router.post('/buyer/:buyerId', orderController.createBuyerParty);
-// GET all items api/v1/items/all
-router.get("/items/:all", orderController.listAllItems);
+router.post('/buyer/new', orderController.createBuyerParty);
+// GET all items api/v1/items
+router.get("/items", orderController.listAllItems);
 // POST api/v1/item/itemId
-router.post("/order/:orderId", orderController.createOrder)
+router.post("/item/new", orderController.createItem)
+// POST api/v1/order/orderId
+router.post("/order/new", orderController.createOrder)
 export default router;

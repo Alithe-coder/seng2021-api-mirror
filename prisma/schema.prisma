@@ -15,12 +15,12 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://neondb_owner:npg_QOSDKi63ZJUR@ep-falling-boat-a7x69krr-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+  url      = env("DATABASE_URL")
 }
 
 model Address {
   id                  String               @id @default(uuid())
-  street              Int
+  streetNo            Int
   streetName          String
   postCode            Int
   suburbName          String
@@ -31,8 +31,8 @@ model Address {
 
 model Contact {
   id                  String               @id @default(uuid())
-  phoneNo             Int
-  telefax             Int
+  phoneNo             String
+  telefax             String
   email               String
   buyer               BuyerCustomerParty?
   sellerCustomerParty SellerCustomerParty?
@@ -64,9 +64,8 @@ model BuyerCustomerParty {
   address   Address @relation(fields: [addressId], references: [id])
   addressId String  @unique
 
-  order               Order?
-  orderCancel         OrderCancel?
-  orderResponseSimple OrderResponseSimple?
+  order               Order[]
+  orderCancel         OrderCancel[]
 }
 
 model SellerCustomerParty {
@@ -80,33 +79,30 @@ model SellerCustomerParty {
   address   Address @relation(fields: [addressId], references: [id])
   addressId String  @unique
 
-  order               Order?
-  orderCancel         OrderCancel?
-  orderResponseSimple OrderResponseSimple?
+  orderCancel         OrderCancel[]
 
   items Item[]
 }
 
 model Item {
   id                    String               @id @default(uuid())
-  itemDescription       String
-  itemName              String
-  itemPrice             Int
-  order                 Order?
-  sellerCustomerParty   SellerCustomerParty? @relation(fields: [sellerCustomerPartyId], references: [id])
-  sellerCustomerPartyId String?
+  description       String
+  name              String
+  price             Decimal
+  sellerCustomerParty   SellerCustomerParty? @relation(fields: [sellerId], references: [id])
+  sellerId String
+  orders                Order[]
 }
 
 model Order {
   id          String              @id @default(uuid())
   orderDate   DateTime
   buyer       BuyerCustomerParty  @relation(fields: [buyerId], references: [id])
-  buyerId     String              @unique
-  seller      SellerCustomerParty @relation(fields: [sellerId], references: [id])
-  sellerId    String              @unique
-  orderChange OrderChange?
+  buyerId     String              
   item        Item                @relation(fields: [itemId], references: [id])
-  itemId      String              @unique
+  itemId      String
+  changes     OrderChange[]
+  cancel      OrderCancel?
 }
 
 model OrderChange {
@@ -114,30 +110,22 @@ model OrderChange {
   changeReason      String
   changeDescription String
   order             Order  @relation(fields: [orderId], references: [id])
-  orderId           String @unique
+  orderId           String
 }
 
 model OrderCancel {
   id String @id @default(uuid())
 
   buyer   BuyerCustomerParty @relation(fields: [buyerId], references: [id])
-  buyerId String             @unique
+  buyerId String             
 
   seller   SellerCustomerParty @relation(fields: [sellerId], references: [id])
-  sellerId String              @unique
+  sellerId String
+
+  order    Order @relation(fields: [orderId], references: [id])
+  orderId String  @unique
 
   cancelNote String
   cancelDate DateTime
-}
-
-model OrderResponseSimple {
-  id String @id @default(uuid())
-
-  buyer   BuyerCustomerParty @relation(fields: [buyerId], references: [id])
-  buyerId String             @unique
-
-  seller   SellerCustomerParty @relation(fields: [sellerId], references: [id])
-  sellerId String              @unique
-
-  acceptedIndicator Boolean
+  
 }

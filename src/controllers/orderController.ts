@@ -5,7 +5,6 @@
 
 import express from 'express';
 import { prisma } from '../db.ts';
-
 // this will be the sort of skeleton code for the rest of the controllers
 // POST /api/v1/orders - Create
 /*
@@ -42,7 +41,7 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
         data: {
             address: {
                 create: {
-                    street: Number(req.body.streetNo),
+                    streetNo: Number(req.body.streetNo),
                     streetName: req.body.streetName,
                     postCode: Number(req.body.postCode),
                     suburbName: req.body.suburbName,
@@ -51,8 +50,8 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
             },
             contact: {
                 create: {
-                    phoneNo: Number(req.body.phoneNo),
-                    telefax: Number(req.body.telefax),
+                    phoneNo: req.body.phoneNo,
+                    telefax: req.body.telefax,
                     email: req.body.email
                 }
             },
@@ -63,23 +62,15 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
                     jobTitle: req.body.jobTitle
                 }
             },
-            items: {
-                create: req.body.items.map((item: any) => ({
-                    itemDescription: item.itemDescription,
-                    itemName: item.itemName,
-                    itemPrice: Number(item.itemPrice),
-                }))
-            },
         },
         include: {
             address: true,
             contact: true,
             person: true,
-            items: true
         }
     });
 
-    res.status(201).json("newPerson");
+    res.status(201).json("newSeller");
 }
 export const createOrder = async (req: express.Request, res: express.Response) => {
     const itemExists = await prisma.item.count({
@@ -87,29 +78,36 @@ export const createOrder = async (req: express.Request, res: express.Response) =
             id: req.body.itemId,
         },
     });
-    const sellerExists = await prisma.sellerCustomerParty.count({
-        where: {
-            id: req.body.sellerId
-        },
-    });
     const buyerExists = await prisma.buyerCustomerParty.count({
         where: {
             id: req.body.buyerId
         },
     });
-    if (itemExists == 0 || buyerExists == 0 || sellerExists == 0) {
+    if (itemExists == 0 || buyerExists == 0) {
         res.status(404).json("ERROR: element not found");
         return;
     }
     const newOrder = await prisma.order.create({
         data: {
             orderDate: new Date(),
-            itemId: req.body.itemId,
-            sellerId: req.body.sellerId,
             buyerId: req.body.buyerId,
+            itemId:  req.body.itemId,
         },
     });
     res.status(201).json(newOrder)
+}
+
+export const createItem = async (req: express.Request, res: express.Response) => {
+    const newItem = await prisma.item.create({
+        data: {
+            description: req.body.description,
+            name: req.body.name,
+            price: parseFloat(req.body.price),
+            sellerId: req.body.sellerId,
+        },
+    });
+
+    res.status(201).json(newItem);
 }
 
 export const createBuyerParty = async (req: express.Request, res: express.Response) => {
@@ -121,7 +119,7 @@ export const createBuyerParty = async (req: express.Request, res: express.Respon
         data: {
             address: {
                 create: {
-                    street: Number(req.body.streetNo),
+                    streetNo: Number(req.body.streetNo),
                     streetName: req.body.streetName,
                     postCode: Number(req.body.postCode),
                     suburbName: req.body.suburbName,
@@ -130,8 +128,8 @@ export const createBuyerParty = async (req: express.Request, res: express.Respon
             },
             contact: {
                 create: {
-                    phoneNo: Number(req.body.phoneNo),
-                    telefax: Number(req.body.telefax),
+                    phoneNo: req.body.phoneNo,
+                    telefax: req.body.telefax,
                     email: req.body.email
                 }
             },
@@ -150,7 +148,7 @@ export const createBuyerParty = async (req: express.Request, res: express.Respon
         }
     });
 
-    res.status(201).json("newPerson");
+    res.status(201).json("newSeller");
 }
 
 // GET /api/v1/orders - List orders using filters
