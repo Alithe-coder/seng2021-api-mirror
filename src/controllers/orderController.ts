@@ -81,6 +81,36 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
 
     res.status(201).json("newPerson");
 }
+export const createOrder = async (req: express.Request, res: express.Response) => {
+    const itemExists = await prisma.item.count({
+        where: {
+            id: req.body.itemId,
+        },
+    });
+    const sellerExists = await prisma.sellerCustomerParty.count({
+        where: {
+            id: req.body.sellerId
+        },
+    });
+    const buyerExists = await prisma.buyerCustomerParty.count({
+        where: {
+            id: req.body.buyerId
+        },
+    });
+    if (itemExists == 0 || buyerExists == 0 || sellerExists == 0) {
+        res.status(404).json("ERROR: element not found");
+        return;
+    }
+    const newOrder = await prisma.order.create({
+        data: {
+            orderDate: new Date(),
+            itemId: req.body.itemId,
+            sellerId: req.body.sellerId,
+            buyerId: req.body.buyerId,
+        },
+    });
+    res.status(201).json(newOrder)
+}
 
 export const createBuyerParty = async (req: express.Request, res: express.Response) => {
     const dataReceived = req.body;

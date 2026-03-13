@@ -34,4 +34,6 @@ router.post('/seller/:sellerId', orderController.createSellerParty);
 router.post('/buyer/:buyerId', orderController.createBuyerParty);
 // GET all items api/v1/items/all
 router.get("/items/:all", orderController.listAllItems);
+// POST api/v1/item/itemId
+router.post("/order/:orderId", orderController.createOrder)
 export default router;
