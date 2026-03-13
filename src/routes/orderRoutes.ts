@@ -12,7 +12,7 @@ const router = Router();
 // e.g. evertime we do curl -X POST http://localhost:3000/api/v1/orders, orderController.createOrder
 
 // POST /api/v1/orders - Create
-router.post('/', orderController.createOrder);
+//router.post('/', orderController.createOrder);
 
 // GET /api/v1/orders - List orders
 router.get('/', orderController.listOrders);
@@ -28,7 +28,9 @@ router.delete('/:orderId', orderController.deleteOrder);
 
 // GET /api/v1/orders/:orderId/ubl - Export XML
 router.post('/:orderId/ubl', orderController.generateUbl);
-
+// POST api/v1/orders/seller/sellerId
 router.post('/seller/:sellerId', orderController.createSellerParty);
+// POST api/v1/orders/buyer/buyerId
 router.post('/buyer/:buyerId', orderController.createBuyerParty);
+
 export default router;

@@ -8,52 +8,76 @@ import { prisma } from '../db.ts';
 
 // this will be the sort of skeleton code for the rest of the controllers
 // POST /api/v1/orders - Create
+/*
 export const createOrder = async (req: express.Request, res: express.Response) => {
     // receive the data from terminal: req.body
     const dataReceived = req.body;
     console.log(dataReceived);
 
+    const newOrder = await prisma.order.create({
+        data : {
+            orderDate: new Date(),
+            
+
+        }
+    })
+
     res.status(200).json({message: "not avaialbe"});
 };
+*/
+
+// TODO allow listing by prices ascending, decreasing etc
+export const listAllItems = async (req: express.Request, res: express.Response) => {
+    const allItems = await prisma.item.findMany();
+    res.status(200).json(allItems);
+}
 
 export const createSellerParty = async (req: express.Request, res: express.Response) => {
     const dataReceived = req.body;
     console.log(dataReceived);
-/*
-*/
+    /*
+    */
 
     const newSeller = await prisma.sellerCustomerParty.create({
-    data: {
-        address: {
-            create: {
-                street: Number(req.body.streetNo),
-                streetName: req.body.streetName,
-                postCode: Number(req.body.postCode),
-                suburbName: req.body.suburbName,
-                stateName: req.body.stateName,
-            }
+        data: {
+            address: {
+                create: {
+                    street: Number(req.body.streetNo),
+                    streetName: req.body.streetName,
+                    postCode: Number(req.body.postCode),
+                    suburbName: req.body.suburbName,
+                    stateName: req.body.stateName,
+                }
+            },
+            contact: {
+                create: {
+                    phoneNo: Number(req.body.phoneNo),
+                    telefax: Number(req.body.telefax),
+                    email: req.body.email
+                }
+            },
+            person: {
+                create: {
+                    firstName: req.body.firstName,
+                    surname: req.body.surname,
+                    jobTitle: req.body.jobTitle
+                }
+            },
+            items: {
+                create: req.body.items.map((item: any) => ({
+                    itemDescription: item.itemDescription,
+                    itemName: item.itemName,
+                    itemPrice: Number(item.itemPrice),
+                }))
+            },
         },
-        contact: {
-            create: {
-                phoneNo: Number(req.body.phoneNo),
-                telefax: Number(req.body.telefax),
-                email: req.body.email
-            }
-        },
-        person: {
-            create: {
-                firstName: req.body.firstName,
-                surname: req.body.surname,
-                jobTitle: req.body.jobTitle
-            }
+        include: {
+            address: true,
+            contact: true,
+            person: true,
+            items: true
         }
-    },
-    include: {
-        address: true,
-        contact: true,
-        person: true
-    }
-});
+    });
 
     res.status(201).json("newPerson");
 }
@@ -64,37 +88,37 @@ export const createBuyerParty = async (req: express.Request, res: express.Respon
 
 
     const newBuyer = await prisma.buyerCustomerParty.create({
-    data: {
-        address: {
-            create: {
-                street: Number(req.body.streetNo),
-                streetName: req.body.streetName,
-                postCode: Number(req.body.postCode),
-                suburbName: req.body.suburbName,
-                stateName: req.body.stateName,
+        data: {
+            address: {
+                create: {
+                    street: Number(req.body.streetNo),
+                    streetName: req.body.streetName,
+                    postCode: Number(req.body.postCode),
+                    suburbName: req.body.suburbName,
+                    stateName: req.body.stateName,
+                }
+            },
+            contact: {
+                create: {
+                    phoneNo: Number(req.body.phoneNo),
+                    telefax: Number(req.body.telefax),
+                    email: req.body.email
+                }
+            },
+            person: {
+                create: {
+                    firstName: req.body.firstName,
+                    surname: req.body.surname,
+                    jobTitle: req.body.jobTitle
+                }
             }
         },
-        contact: {
-            create: {
-                phoneNo: Number(req.body.phoneNo),
-                telefax: Number(req.body.telefax),
-                email: req.body.email
-            }
-        },
-        person: {
-            create: {
-                firstName: req.body.firstName,
-                surname: req.body.surname,
-                jobTitle: req.body.jobTitle
-            }
+        include: {
+            address: true,
+            contact: true,
+            person: true
         }
-    },
-    include: {
-        address: true,
-        contact: true,
-        person: true
-    }
-});
+    });
 
     res.status(201).json("newPerson");
 }
@@ -109,13 +133,13 @@ export const listOrders = (req: express.Request, res: express.Response) => {
 // GET /api/v1/orders/:orderId - Retreive
 export const getOrderById = (req: express.Request, res: express.Response) => {
     const { orderId } = req.params;
-    res.status(200).json({ message: `Order to be retrieved ${orderId}`});
+    res.status(200).json({ message: `Order to be retrieved ${orderId}` });
 };
 
 // PUT /api/v1/orders/:orderId - update
 export const updateOrder = (req: express.Request, res: express.Response) => {
     const { orderId } = req.params;
-    res.status(200).json({ message: `Order to be retrieved ${orderId}`});
+    res.status(200).json({ message: `Order to be retrieved ${orderId}` });
 };
 
 // DELETE /api/v1/orders/:orderId - Delete

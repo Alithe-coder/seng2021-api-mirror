@@ -37,9 +37,10 @@ model Contact {
   buyer               BuyerCustomerParty?
   sellerCustomerParty SellerCustomerParty?
 }
+
 model Test {
-  id  String @id @default(uuid())
-  name  String
+  id   String @id @default(uuid())
+  name String
 }
 
 model Person {
@@ -87,10 +88,13 @@ model SellerCustomerParty {
 }
 
 model Item {
-  id              String @id @default(uuid())
-  itemDescription String
-  itemName        String
-  itemPrice       Int
+  id                    String               @id @default(uuid())
+  itemDescription       String
+  itemName              String
+  itemPrice             Int
+  order                 Order?
+  sellerCustomerParty   SellerCustomerParty? @relation(fields: [sellerCustomerPartyId], references: [id])
+  sellerCustomerPartyId String?
 }
 
 model Order {
@@ -101,6 +105,8 @@ model Order {
   seller      SellerCustomerParty @relation(fields: [sellerId], references: [id])
   sellerId    String              @unique
   orderChange OrderChange?
+  item        Item                @relation(fields: [itemId], references: [id])
+  itemId      String              @unique
 }
 
 model OrderChange {
