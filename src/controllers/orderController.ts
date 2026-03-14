@@ -50,7 +50,7 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
         }
     });
 
-    res.status(201).json("newSeller");
+    res.status(201).json(newSeller);
 }
 export const createOrder = async (req: express.Request, res: express.Response) => {
     const itemExists = await prisma.item.count({
@@ -68,11 +68,17 @@ export const createOrder = async (req: express.Request, res: express.Response) =
         return;
     }
     const newOrder = await prisma.order.create({
-        data: {
-            orderDate: new Date(),
-            buyerId: req.body.buyerId,
-            itemId:  req.body.itemId,
-        },
+    data: {
+        orderDate: new Date(),
+        buyerId: req.body.buyerId,
+        lines: {
+            create: {
+                itemId: req.body.itemId,
+                quantity: 1, // Defaulting to 1 for now
+                unitPrice: 0 // You'd want to fetch the item price first
+            }
+        }
+    }
     });
     res.status(201).json(newOrder)
 }
@@ -128,7 +134,7 @@ export const createBuyerParty = async (req: express.Request, res: express.Respon
         }
     });
 
-    res.status(201).json("newSeller");
+    res.status(201).json(newBuyer);
 }
 
 // GET /api/v1/orders - List orders using filters
