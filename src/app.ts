@@ -1,15 +1,11 @@
-import app from './app.ts';
-
-<<<<<<< HEAD
 // index.ts is the main file which will run everytime the Node server starts. ALl 
 import 'dotenv/config';
 import express from 'express';
 import orderRoutes from './routes/orderRoutes.ts';
-import { errorHandler } from './middleware/errorHandler.ts'
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swagger.ts';
 
 const app = express();
-app.set('json spaces', 2);
-const port = 3000;
 
 // we need to ensure that our server can actuall read JSON
 app.use(express.json());
@@ -18,7 +14,7 @@ app.use(express.json());
 app.use('/api/v1/orders', orderRoutes);
 
 // health check to see how the server is going 
-app.get('/api/v1/health', (req: express.Request, res: express.Response) => {
+app.get('/api/v1/health', (req, res) => {
     res.status(200).json({
         status : {
             indicator: "<placeholder>",
@@ -32,14 +28,6 @@ app.get('/api/v1/health', (req: express.Request, res: express.Response) => {
     })
 });
 
-// this MUST be after any routes
-app.use(errorHandler);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// when server is running
-=======
-const port = 3000;
-
->>>>>>> main
-app.listen(port, () => {
-    console.log(`listening on port ${port}...`);
-});
+export default app;
