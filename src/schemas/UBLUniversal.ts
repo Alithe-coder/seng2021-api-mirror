@@ -9,7 +9,9 @@ export interface Person {
   personId: string;
   firstName: string;
   surname: string;
+  phoneNo: number;
   jobTitle: string;
+  contactinfo: Contact
   
 }
 

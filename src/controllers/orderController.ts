@@ -13,6 +13,7 @@ export const createOrder = async (req: express.Request, res: express.Response) =
     const dataReceived = req.body;
     console.log(dataReceived);
 
+    /*
     const newOrder = await prisma.order.create({
         data : {
             orderDate: new Date(),
@@ -20,6 +21,13 @@ export const createOrder = async (req: express.Request, res: express.Response) =
 
         }
     })
+    */
+   const newOrder = {
+        id: 1,
+        buyerName: req.body.buyerName,
+        item: req.body.item,
+        quantity: req.body.quantity
+    };
 
     res.status(200).json({message: "not avaialbe"});
 };

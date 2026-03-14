@@ -7,7 +7,9 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "predev": "npm run lint:fix"
+    "predev": "npm run lint:fix",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
   "repository": {
     "type": "git",
@@ -40,7 +42,7 @@
     "dotenv": "^17.3.1",
     "eslint": "^10.0.3",
     "globals": "^17.4.0",
-    "jest": "^30.2.0",
+    "jest": "^30.3.0",
     "nodemon": "^3.1.14",
     "prisma": "^6.19.2",
     "supertest": "^7.2.2",

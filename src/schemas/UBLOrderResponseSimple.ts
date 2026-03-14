@@ -1,3 +1,4 @@
+// commented Address, Person since they were unused
 import type { BuyerCustomerParty, SellerSupplierParty } from "./UBLUniversal.ts";
 
 
