@@ -1,37 +1,7 @@
-// index.ts is the main file which will run everytime the Node server starts. ALl 
-import 'dotenv/config';
-import express from 'express';
-import orderRoutes from './routes/orderRoutes.ts';
-import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './swagger.ts';
+import app from './app.ts';
 
-const app = express();
 const port = 3000;
 
-// we need to ensure that our server can actuall read JSON
-app.use(express.json());
-
-// we need to use /api/v1/orders everytime we are to do with orders
-app.use('/api/v1/orders', orderRoutes);
-
-// health check to see how the server is going 
-app.get('/api/v1/health', (req, res) => {
-    res.status(200).json({
-        status : {
-            indicator: "<placeholder>",
-            description: "<placeholder>"
-        },
-        services: {
-            "vercel": "<placeholder>",
-        },
-        version : "1.0",
-        uptimeSeconds: Math.floor(process.uptime())
-    })
-});
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// when server is running
 app.listen(port, () => {
-    console.log(`listening...`);
+    console.log(`listening on port ${port}...`);
 });
