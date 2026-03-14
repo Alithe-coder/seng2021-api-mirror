@@ -40,5 +40,5 @@
     "emitDeclarationOnly": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../db.ts"]
 }
