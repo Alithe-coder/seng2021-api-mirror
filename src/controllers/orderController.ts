@@ -63,27 +63,23 @@ export const createOrder = async (req: express.Request, res: express.Response) =
         return res.status(404).json({ error: "Buyer or Item not found" });
     }
 
-    try {
-        const newOrder = await prisma.order.create({
-            data: {
-                orderDate: new Date(),
-                buyerId: buyerId,
-                lines: {
-                    create: {
-                        itemId: itemId,
-                        quantity: 1, // default for now
-                        unitPrice: item.price 
-                    }
+    const newOrder = await prisma.order.create({
+        data: {
+            orderDate: new Date(),
+            buyerId: buyerId,
+            lines: {
+                create: {
+                    itemId: itemId,
+                    quantity: 1, // default for now
+                    unitPrice: item.price 
                 }
-            },
-            include: {
-                lines: true // returns the lines in the response so you can see them
             }
-        });
-        res.status(201).json(newOrder);
-    } catch (error) {
-        res.status(500).json({ error: "Internal Server Error" });
-    }
+        },
+        include: {
+            lines: true // returns the lines in the response so you can see them
+        }
+    });
+    res.status(201).json(newOrder);
 };
 
 export const createItem = async (req: express.Request, res: express.Response) => {
