@@ -6,6 +6,7 @@
 import express from 'express';
 import type { AppError } from '../middleware/errorHandler.ts';
 import { prisma } from '../db.ts';
+import { validateCreateOrder } from '../utils/orderValidation.ts'
 
 // TODO allow listing by prices ascending, decreasing etc
 export const listAllItems = async (req: express.Request, res: express.Response) => {
@@ -22,9 +23,9 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
         data: {
             address: {
                 create: {
-                    streetNo: Number(req.body.streetNo),
+                    streetNo: req.body.streetNo,
                     streetName: req.body.streetName,
-                    postCode: Number(req.body.postCode),
+                    postCode: req.body.postCode,
                     suburbName: req.body.suburbName,
                     stateName: req.body.stateName,
                 }
@@ -54,33 +55,56 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
     res.status(201).json(newSeller);
 }
 
-export const createOrder = async (req: express.Request, res: express.Response) => {
+export const createOrder = async (req: express.Request, res: express.Response, next: express.NextFunction ) => {
+    
+    // ---input validation---
+    const validaitionErrors = validateCreateOrder(req.body);
+    
+    // if errors occur
+    if (validaitionErrors.length > 0) {
+        const err: AppError = new Error("Invalid order data provided");
+        err.type = "VALIDATION_ERROR";
+        err.details = validaitionErrors;
+
+        return next(err);
+    }
+    
     const { buyerId, itemId } = req.body;
 
-    const item = await prisma.item.findUnique({ where: { id: itemId } });
-    const buyerExists = await prisma.buyerCustomerParty.count({ where: { id: buyerId } });
+    try {
+        const item = await prisma.item.findUnique({ where: { id: itemId } });
+        const buyerExists = await prisma.buyerCustomerParty.count({ where: { id: buyerId } });
+        
+        if (!item || buyerExists === 0) {
+            const err: AppError = new Error("Buyer or Item not found");
+            err.type = "NOT_FOUND";
+            return next(err);
+        }
 
-    if (!item || buyerExists === 0) {
-        return res.status(404).json({ error: "Buyer or Item not found" });
+        // create the new order object containg buyerId
+        const newOrder = await prisma.order.create({
+            data: {
+                orderDate: new Date(),
+                buyerId: buyerId,
+                lines: {
+                    create: {
+                        itemId: itemId,
+                        quantity: 1, // default for now
+                        unitPrice: item.price 
+                    }
+                }
+            },
+            include: {
+                lines: true // returns the lines in the response so you can see them
+            }
+        });
+
+        res.status(201).json(newOrder);
+
+    } catch (error) {
+        next(error);
     }
 
-    const newOrder = await prisma.order.create({
-        data: {
-            orderDate: new Date(),
-            buyerId: buyerId,
-            lines: {
-                create: {
-                    itemId: itemId,
-                    quantity: 1, // default for now
-                    unitPrice: item.price 
-                }
-            }
-        },
-        include: {
-            lines: true // returns the lines in the response so you can see them
-        }
-    });
-    res.status(201).json(newOrder);
 };
 
 export const createItem = async (req: express.Request, res: express.Response) => {
@@ -105,9 +129,9 @@ export const createBuyerParty = async (req: express.Request, res: express.Respon
         data: {
             address: {
                 create: {
-                    streetNo: Number(req.body.streetNo),
+                    streetNo: req.body.streetNo,
                     streetName: req.body.streetName,
-                    postCode: Number(req.body.postCode),
+                    postCode: req.body.postCode,
                     suburbName: req.body.suburbName,
                     stateName: req.body.stateName,
                 }

@@ -1,6 +1,3 @@
-import app from './app.ts';
-
-<<<<<<< HEAD
 // index.ts is the main file which will run everytime the Node server starts. ALl 
 import 'dotenv/config';
 import express from 'express';
@@ -36,10 +33,6 @@ app.get('/api/v1/health', (req: express.Request, res: express.Response) => {
 app.use(errorHandler);
 
 // when server is running
-=======
-const port = 3000;
-
->>>>>>> main
 app.listen(port, () => {
     console.log(`listening on port ${port}...`);
 });

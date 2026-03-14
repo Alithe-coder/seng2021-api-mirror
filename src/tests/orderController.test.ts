@@ -19,7 +19,8 @@ describe('Order controller unit tests', () => {
     } as unknown as express.Request;
     const res = mockResponse();
 
-    await orderController.createOrder(req, res);
+    const next = jest.fn();
+    await orderController.createOrder(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
@@ -51,7 +52,8 @@ describe('Order controller unit tests', () => {
     } as unknown as express.Request;
     const res = mockResponse();
 
-    orderController.getOrderById(req, res);
+    const next = jest.fn();
+    orderController.getOrderById(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
