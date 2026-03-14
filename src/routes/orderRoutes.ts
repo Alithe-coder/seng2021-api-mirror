@@ -113,6 +113,24 @@ router.get('/:orderId', orderController.getOrderById);
 router.put('/:orderId', orderController.updateOrder);
 
 // DELETE /api/v1/orders/:orderId - Delete
+/**
+ * @openapi
+ * /api/v1/orders/{orderId}:
+ *   delete:
+ *     summary: Delete an order
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the order to delete
+ *     responses:
+ *       204:
+ *         description: Order deleted successfully
+ */
 router.delete('/:orderId', orderController.deleteOrder);
 
 // GET /api/v1/orders/:orderId/ubl - Export XML
