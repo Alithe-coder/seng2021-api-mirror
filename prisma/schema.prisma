@@ -15,7 +15,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Address {
@@ -91,19 +90,31 @@ model Item {
   price             Decimal
   sellerCustomerParty   SellerCustomerParty? @relation(fields: [sellerId], references: [id])
   sellerId String
-  orders                Order[]
+  orderLines        OrderLine[]
 }
 
 model Order {
   id          String              @id @default(uuid())
   orderDate   DateTime
+  status String                   @default("DRAFT")
   buyer       BuyerCustomerParty  @relation(fields: [buyerId], references: [id])
   buyerId     String              
-  item        Item                @relation(fields: [itemId], references: [id])
-  itemId      String
+  lines       OrderLine[]
   changes     OrderChange[]
   cancel      OrderCancel?
 }
+
+model OrderLine {
+  id        String  @id @default(uuid())
+  quantity  Int
+  unitPrice Decimal
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  item      Item    @relation(fields: [itemId], references: [id])
+  itemId    String
+}
+
+
 
 model OrderChange {
   id                String @id @default(uuid())
