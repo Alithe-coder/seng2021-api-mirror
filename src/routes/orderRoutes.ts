@@ -37,8 +37,26 @@ const router = Router();
  */
 router.post('/', orderController.createOrder);
 
+/**
+ * @openapi
+ * /api/v1/orders:
+ *   get:
+ *     summary: Retrieve all orders
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: query
+ *         name: buyerName
+ *         schema:
+ *           type: string
+ *         description: Filter orders by buyer name
+ *     responses:
+ *       200:
+ *         description: A list of orders
+ */
 // GET /api/v1/orders - List orders
 router.get('/', orderController.listOrders);
+
 
 // GET /api/v1/orders/:orderId - Retreive
 router.get('/:orderId', orderController.getOrderById);
