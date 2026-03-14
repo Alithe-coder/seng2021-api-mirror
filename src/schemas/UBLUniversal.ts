@@ -2,6 +2,7 @@ export interface BuyerCustomerParty {
   buyerId: string;
   owner: Person
   buyerAddress: Address;
+  contactinfo: Contact;
 }
 
 export interface Person {
@@ -34,4 +35,5 @@ export interface SellerSupplierParty {
   companyId: string;
   sellerAddress: Address;
   seller: Person;
+  contactinfo: Contact
 }
