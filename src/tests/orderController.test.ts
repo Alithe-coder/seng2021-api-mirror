@@ -1,9 +1,10 @@
 import * as orderController from '../controllers/orderController.ts';
 import { jest } from '@jest/globals';
+import { Request, Response } from 'express'
 
 describe('Order controller unit tests', () => {
   const mockResponse = () => {
-    const res: any = {};
+    const res: Response = {};
     res.status = jest.fn().mockReturnValue(res);
     res.json = jest.fn().mockReturnValue(res);
     res.send = jest.fn().mockReturnValue(res);
@@ -11,7 +12,7 @@ describe('Order controller unit tests', () => {
   };
 
   test('createOrder returns 201 with created order', async () => {
-    const req: any = {
+    const req: Request = {
       body: {
         buyerName: 'Jason',
         item: 'Laptop',
@@ -32,7 +33,7 @@ describe('Order controller unit tests', () => {
   });
 
   test('listOrders returns 200 with filters', () => {
-    const req: any = {
+    const req: Request = {
       query: { buyerName: 'Jason' },
     };
     const res = mockResponse();
@@ -47,7 +48,7 @@ describe('Order controller unit tests', () => {
   });
 
   test('getOrderById returns 200', () => {
-    const req: any = {
+    const req: Request = {
       params: { orderId: '123' },
     };
     const res = mockResponse();
@@ -61,7 +62,7 @@ describe('Order controller unit tests', () => {
   });
 
   test('updateOrder returns 200', () => {
-    const req: any = {
+    const req: Request = {
       params: { orderId: '123' },
     };
     const res = mockResponse();
@@ -75,7 +76,7 @@ describe('Order controller unit tests', () => {
   });
 
   test('deleteOrder returns 204', () => {
-    const req: any = {};
+    const req: Request = {};
     const res = mockResponse();
 
     orderController.deleteOrder(req, res);
@@ -85,7 +86,7 @@ describe('Order controller unit tests', () => {
   });
 
   test('generateUbl returns XML', () => {
-    const req: any = {
+    const req: Request = {
       params: { orderId: '123' },
     };
     const res = mockResponse();
