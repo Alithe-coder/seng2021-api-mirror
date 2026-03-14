@@ -6,7 +6,6 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger.ts';
 
 const app = express();
-const port = 3000;
 
 // we need to ensure that our server can actuall read JSON
 app.use(express.json());
@@ -30,10 +29,5 @@ app.get('/api/v1/health', (req, res) => {
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// when server is running
-app.listen(port, () => {
-    console.log(`listening...`);
-});
 
 export default app;
