@@ -52,36 +52,39 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
 
     res.status(201).json(newSeller);
 }
+
 export const createOrder = async (req: express.Request, res: express.Response) => {
-    const itemExists = await prisma.item.count({
-        where: {
-            id: req.body.itemId,
-        },
-    });
-    const buyerExists = await prisma.buyerCustomerParty.count({
-        where: {
-            id: req.body.buyerId
-        },
-    });
-    if (itemExists == 0 || buyerExists == 0) {
-        res.status(404).json("ERROR: element not found");
-        return;
+    const { buyerId, itemId } = req.body;
+
+    const item = await prisma.item.findUnique({ where: { id: itemId } });
+    const buyerExists = await prisma.buyerCustomerParty.count({ where: { id: buyerId } });
+
+    if (!item || buyerExists === 0) {
+        return res.status(404).json({ error: "Buyer or Item not found" });
     }
-    const newOrder = await prisma.order.create({
-    data: {
-        orderDate: new Date(),
-        buyerId: req.body.buyerId,
-        lines: {
-            create: {
-                itemId: req.body.itemId,
-                quantity: 1, // Defaulting to 1 for now
-                unitPrice: 0 // You'd want to fetch the item price first
+
+    try {
+        const newOrder = await prisma.order.create({
+            data: {
+                orderDate: new Date(),
+                buyerId: buyerId,
+                lines: {
+                    create: {
+                        itemId: itemId,
+                        quantity: 1, // default for now
+                        unitPrice: item.price 
+                    }
+                }
+            },
+            include: {
+                lines: true // returns the lines in the response so you can see them
             }
-        }
+        });
+        res.status(201).json(newOrder);
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
     }
-    });
-    res.status(201).json(newOrder)
-}
+};
 
 export const createItem = async (req: express.Request, res: express.Response) => {
     const newItem = await prisma.item.create({
