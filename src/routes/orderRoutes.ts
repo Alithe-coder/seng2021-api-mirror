@@ -153,5 +153,14 @@ router.delete('/:orderId', orderController.deleteOrder);
  *         description: UBL XML generated successfully
  */
 router.post('/:orderId/ubl', orderController.generateUbl);
-
+// POST api/v1/orders/seller/sellerId
+router.post('/seller/new', orderController.createSellerParty);
+// POST api/v1/orders/buyer/buyerId
+router.post('/buyer/new', orderController.createBuyerParty);
+// GET all items api/v1/items
+router.get("/items", orderController.listAllItems);
+// POST api/v1/item/itemId
+router.post("/item/new", orderController.createItem)
+// POST api/v1/order/orderId
+router.post("/order/new", orderController.createOrder)
 export default router;

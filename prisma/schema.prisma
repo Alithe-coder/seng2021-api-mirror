@@ -6,24 +6,138 @@
 
 // prisma/schema.prisma
 
-
-
 // HOW TO USE
 // npx prisma db push : update structure of database
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma" // Required
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id                  String               @id @default(uuid())
+  streetNo            Int
+  streetName          String
+  postCode            Int
+  suburbName          String
+  stateName           String
+  buyer               BuyerCustomerParty?
+  sellerCustomerParty SellerCustomerParty?
+}
+
+model Contact {
+  id                  String               @id @default(uuid())
+  phoneNo             String
+  telefax             String
+  email               String
+  buyer               BuyerCustomerParty?
+  sellerCustomerParty SellerCustomerParty?
+}
+
+model Test {
+  id   String @id @default(uuid())
+  name String
+}
+
+model Person {
+  id        String              @id @default(uuid())
+  firstName String
+  surname   String
+  jobTitle  String
+  buyer     BuyerCustomerParty?
+
+  sellerCustomerParty SellerCustomerParty?
+}
+
+model BuyerCustomerParty {
+  id String @id @default(uuid())
+
+  contact   Contact @relation(fields: [contactId], references: [id])
+  contactId String  @unique
+  person    Person  @relation(fields: [personId], references: [id])
+  personId  String  @unique
+
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String  @unique
+
+  order               Order[]
+  orderCancel         OrderCancel[]
+}
+
+model SellerCustomerParty {
+  id String @id @default(uuid())
+
+  contact   Contact @relation(fields: [contactId], references: [id])
+  contactId String  @unique
+  person    Person  @relation(fields: [personId], references: [id])
+  personId  String  @unique
+
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String  @unique
+
+  orderCancel         OrderCancel[]
+
+  items Item[]
+}
+
+model Item {
+  id                    String               @id @default(uuid())
+  description       String
+  name              String
+  price             Decimal
+  sellerCustomerParty   SellerCustomerParty? @relation(fields: [sellerId], references: [id])
+  sellerId String
+  orderLines        OrderLine[]
+}
+
+model Order {
+  id          String              @id @default(uuid())
+  orderDate   DateTime
+  status String                   @default("DRAFT")
+  buyer       BuyerCustomerParty  @relation(fields: [buyerId], references: [id])
+  buyerId     String              
+  lines       OrderLine[]
+  changes     OrderChange[]
+  cancel      OrderCancel?
+}
+
+model OrderLine {
+  id        String  @id @default(uuid())
+  quantity  Int
+  unitPrice Decimal
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  item      Item    @relation(fields: [itemId], references: [id])
+  itemId    String
 }
 
 
-model Order {
-  id        String   @id @default(uuid())
-  buyerName String
-  item      String
-  quantity  Int
-  status    String   @default("DRAFT")
-  createdAt DateTime @default(now())
+
+model OrderChange {
+  id                String @id @default(uuid())
+  changeReason      String
+  changeDescription String
+  order             Order  @relation(fields: [orderId], references: [id])
+  orderId           String
+}
+
+model OrderCancel {
+  id String @id @default(uuid())
+
+  buyer   BuyerCustomerParty @relation(fields: [buyerId], references: [id])
+  buyerId String             
+
+  seller   SellerCustomerParty @relation(fields: [sellerId], references: [id])
+  sellerId String
+
+  order    Order @relation(fields: [orderId], references: [id])
+  orderId String  @unique
+
+  cancelNote String
+  cancelDate DateTime
+  
 }
