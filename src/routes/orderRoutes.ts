@@ -134,6 +134,24 @@ router.put('/:orderId', orderController.updateOrder);
 router.delete('/:orderId', orderController.deleteOrder);
 
 // GET /api/v1/orders/:orderId/ubl - Export XML
+/**
+ * @openapi
+ * /api/v1/orders/{orderId}/ubl:
+ *   post:
+ *     summary: Generate UBL XML for an order
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the order
+ *     responses:
+ *       200:
+ *         description: UBL XML generated successfully
+ */
 router.post('/:orderId/ubl', orderController.generateUbl);
 
 export default router;
