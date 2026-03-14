@@ -37,6 +37,7 @@ const router = Router();
  */
 router.post('/', orderController.createOrder);
 
+// GET /api/v1/orders - List orders
 /**
  * @openapi
  * /api/v1/orders:
@@ -54,11 +55,27 @@ router.post('/', orderController.createOrder);
  *       200:
  *         description: A list of orders
  */
-// GET /api/v1/orders - List orders
 router.get('/', orderController.listOrders);
 
-
 // GET /api/v1/orders/:orderId - Retreive
+/**
+ * @openapi
+ * /api/v1/orders/{orderId}:
+ *   get:
+ *     summary: Retrieve a specific order
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the order to retrieve
+ *     responses:
+ *       200:
+ *         description: Order retrieved successfully
+ */
 router.get('/:orderId', orderController.getOrderById);
 
 // PUT /api/v1/orders/:orderId - update
