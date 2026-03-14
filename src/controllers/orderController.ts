@@ -5,33 +5,6 @@
 
 import express from 'express';
 import { prisma } from '../db.ts';
-// this will be the sort of skeleton code for the rest of the controllers
-// POST /api/v1/orders - Create
-/*
-export const createOrder = async (req: express.Request, res: express.Response) => {
-    // receive the data from terminal: req.body
-    const dataReceived = req.body;
-    console.log(dataReceived);
-
-    /*
-    const newOrder = await prisma.order.create({
-        data : {
-            orderDate: new Date(),
-            
-
-        }
-    })
-    */
-   const newOrder = {
-        id: 1,
-        buyerName: req.body.buyerName,
-        item: req.body.item,
-        quantity: req.body.quantity
-    };
-
-    res.status(200).json({message: "not avaialbe"});
-};
-*/
 
 // TODO allow listing by prices ascending, decreasing etc
 export const listAllItems = async (req: express.Request, res: express.Response) => {
@@ -42,8 +15,7 @@ export const listAllItems = async (req: express.Request, res: express.Response) 
 export const createSellerParty = async (req: express.Request, res: express.Response) => {
     const dataReceived = req.body;
     console.log(dataReceived);
-    /*
-    */
+   
 
     const newSeller = await prisma.sellerCustomerParty.create({
         data: {
