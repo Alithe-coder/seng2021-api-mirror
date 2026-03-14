@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import * as orderController from '../controllers/orderController.ts';
 import { jest } from '@jest/globals';
 

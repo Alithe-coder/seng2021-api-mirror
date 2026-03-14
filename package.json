@@ -9,7 +9,8 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "predev": "npm run lint:fix",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

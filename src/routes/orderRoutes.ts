@@ -42,18 +42,36 @@ router.post('/', orderController.createOrder);
  * @openapi
  * /api/v1/orders:
  *   get:
- *     summary: Retrieve all orders
+ *     summary: Retrieve a list of all orders
  *     tags:
  *       - Orders
- *     parameters:
- *       - in: query
- *         name: buyerName
- *         schema:
- *           type: string
- *         description: Filter orders by buyer name
  *     responses:
  *       200:
  *         description: A list of orders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   buyerName:
+ *                     type: string
+ *                   item:
+ *                     type: string
+ *                   quantity:
+ *                     type: integer
+ *             example:
+ *               - id: 1
+ *                 buyerName: "Alice"
+ *                 item: "Laptop"
+ *                 quantity: 2
+ *               - id: 2
+ *                 buyerName: "Bob"
+ *                 item: "Phone"
+ *                 quantity: 1
  */
 router.get('/', orderController.listOrders);
 
