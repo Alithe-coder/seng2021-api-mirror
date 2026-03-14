@@ -79,6 +79,37 @@ router.get('/', orderController.listOrders);
 router.get('/:orderId', orderController.getOrderById);
 
 // PUT /api/v1/orders/:orderId - update
+/**
+ * @openapi
+ * /api/v1/orders/{orderId}:
+ *   put:
+ *     summary: Update an existing order
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the order to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               buyerName:
+ *                 type: string
+ *               item:
+ *                 type: string
+ *               quantity:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Order updated successfully
+ */
 router.put('/:orderId', orderController.updateOrder);
 
 // DELETE /api/v1/orders/:orderId - Delete
