@@ -34,13 +34,13 @@ const sampleParty = {
     id: 'buyer-1',
     address: { streetNo: '1', streetName: 'Main St', postCode: '2000', suburbName: 'Sydney', stateName: 'NSW' },
     contact: { phoneNo: '0400000000', telefax: '0200000000', email: 'buyer@test.com' },
-    person:  { firstName: 'Jason', surname: 'Smith', jobTitle: 'Manager' }
+    person:  { firstName: 'Bruce', surname: 'Wayne', jobTitle: 'BATMAN' }
 };
 
 const validPartyBody = {
     streetNo: '1', streetName: 'Main St', postCode: '2000', suburbName: 'Sydney', stateName: 'NSW',
     phoneNo: '0400000000', telefax: '0200000000', email: 'buyer@test.com',
-    firstName: 'Jason', surname: 'Smith', jobTitle: 'Manager'
+    firstName: 'Clark', surname: 'Kent', jobTitle: 'SUPERMAN'
 };
 
 // ─── GET /api/v1/orders ───────────────────────────────────────────────────────

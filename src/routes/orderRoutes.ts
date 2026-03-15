@@ -18,7 +18,9 @@ const router = Router();
  *     tags: [Items]
  *     responses:
  *       200:
- *         description: Array of items
+ *         description: Array of items returned successfully
+ *       500:
+ *         description: Internal server error
  */
 router.get('/items', orderController.listAllItems);
 
@@ -36,13 +38,17 @@ router.get('/items', orderController.listAllItems);
  *             type: object
  *             required: [name, description, price, sellerId]
  *             properties:
- *               name:        { type: string }
- *               description: { type: string }
- *               price:       { type: number }
- *               sellerId:    { type: string }
+ *               name:        { type: string, example: Laptop }
+ *               description: { type: string, example: A high-end laptop }
+ *               price:       { type: number, example: 999.99 }
+ *               sellerId:    { type: string, example: seller-uuid }
  *     responses:
  *       201:
- *         description: Item created
+ *         description: Item created successfully
+ *       422:
+ *         description: Validation error - required fields missing or invalid
+ *       404:
+ *         description: Seller not found
  */
 router.post('/item/new', orderController.createItem);
 
@@ -60,7 +66,9 @@ router.post('/item/new', orderController.createItem);
  *             $ref: '#/components/schemas/PartyInput'
  *     responses:
  *       201:
- *         description: Buyer created
+ *         description: Buyer created successfully
+ *       422:
+ *         description: Validation error - required fields missing or invalid
  */
 router.post('/buyer/new', orderController.createBuyerParty);
 
@@ -78,7 +86,9 @@ router.post('/buyer/new', orderController.createBuyerParty);
  *             $ref: '#/components/schemas/PartyInput'
  *     responses:
  *       201:
- *         description: Seller created
+ *         description: Seller created successfully
+ *       422:
+ *         description: Validation error - required fields missing or invalid
  */
 router.post('/seller/new', orderController.createSellerParty);
 
@@ -88,20 +98,24 @@ router.post('/seller/new', orderController.createSellerParty);
  * @openapi
  * /api/v1/orders:
  *   get:
- *     summary: List all orders (supports filter query params)
+ *     summary: List all orders
  *     tags: [Orders]
  *     parameters:
  *       - in: query
  *         name: status
- *         schema: { type: string }
- *         description: Filter by order status
+ *         schema:
+ *           type: string
+ *           enum: [DRAFT, SUBMITTED, CANCELLED]
+ *         description: Filter orders by status
  *       - in: query
  *         name: buyerId
  *         schema: { type: string }
- *         description: Filter by buyer ID
+ *         description: Filter orders by buyer ID
  *     responses:
  *       200:
- *         description: Array of orders
+ *         description: Array of orders returned successfully
+ *       500:
+ *         description: Internal server error
  */
 router.get('/', orderController.listOrders);
 
@@ -119,14 +133,14 @@ router.get('/', orderController.listOrders);
  *             type: object
  *             required: [buyerId, itemId]
  *             properties:
- *               buyerId:  { type: string }
- *               itemId:   { type: string }
- *               quantity: { type: integer, default: 1 }
+ *               buyerId:  { type: string, example: buyer-uuid }
+ *               itemId:   { type: string, example: item-uuid }
+ *               quantity: { type: integer, example: 1, default: 1 }
  *     responses:
  *       201:
- *         description: Order created
- *       400:
- *         description: Validation error
+ *         description: Order created successfully
+ *       422:
+ *         description: Validation error - buyerId or itemId missing
  *       404:
  *         description: Buyer or item not found
  */
@@ -145,9 +159,10 @@ router.post('/', orderController.createOrder);
  *         name: orderId
  *         required: true
  *         schema: { type: string }
+ *         description: The ID of the order to retrieve
  *     responses:
  *       200:
- *         description: Order found
+ *         description: Order retrieved successfully
  *       404:
  *         description: Order not found
  */
@@ -164,6 +179,7 @@ router.get('/:orderId', orderController.getOrderById);
  *         name: orderId
  *         required: true
  *         schema: { type: string }
+ *         description: The ID of the order to update
  *     requestBody:
  *       required: true
  *       content:
@@ -172,10 +188,15 @@ router.get('/:orderId', orderController.getOrderById);
  *             type: object
  *             required: [status]
  *             properties:
- *               status: { type: string }
+ *               status:
+ *                 type: string
+ *                 enum: [DRAFT, SUBMITTED, CANCELLED]
+ *                 example: SUBMITTED
  *     responses:
  *       200:
- *         description: Order updated
+ *         description: Order updated successfully
+ *       422:
+ *         description: Validation error - status missing or invalid value
  *       404:
  *         description: Order not found
  */
@@ -192,9 +213,10 @@ router.put('/:orderId', orderController.updateOrder);
  *         name: orderId
  *         required: true
  *         schema: { type: string }
+ *         description: The ID of the order to delete
  *     responses:
  *       204:
- *         description: Deleted
+ *         description: Order deleted successfully
  *       404:
  *         description: Order not found
  */
@@ -211,9 +233,15 @@ router.delete('/:orderId', orderController.deleteOrder);
  *         name: orderId
  *         required: true
  *         schema: { type: string }
+ *         description: The ID of the order to export
  *     responses:
  *       200:
  *         description: UBL XML document
+ *         content:
+ *           application/xml:
+ *             schema:
+ *               type: string
+ *               example: <?xml version="1.0" encoding="UTF-8"?><Order><ID>order-uuid</ID></Order>
  */
 router.get('/:orderId/ubl', orderController.generateUbl);
 
