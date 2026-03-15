@@ -19,8 +19,6 @@ export const listAllItems = async (req: express.Request, res: express.Response) 
     res.status(200).json(allItems);
 }
 
-
-
 export const createOrder = async (req: express.Request, res: express.Response, next: express.NextFunction ) => {
     
     // ---input validation---
