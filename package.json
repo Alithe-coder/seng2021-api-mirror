@@ -4,6 +4,7 @@
   "description": "Order Creation API for SENG2021",
   "main": "src/index.ts",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc",
