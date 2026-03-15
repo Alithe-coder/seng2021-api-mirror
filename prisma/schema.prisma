@@ -20,9 +20,9 @@ datasource db {
 
 model Address {
   id                  String               @id @default(uuid())
-  streetNo            Int
+  streetNo            String
   streetName          String
-  postCode            Int
+  postCode            String
   suburbName          String
   stateName           String
   buyer               BuyerCustomerParty?
