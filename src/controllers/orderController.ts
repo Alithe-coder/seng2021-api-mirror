@@ -6,7 +6,7 @@
 import express from 'express';
 import type { AppError } from '../middleware/errorHandler.ts';
 import { prisma } from '../db.ts';
-import { validateCreateOrder } from '../utils/orderValidation.ts'
+import { validateCreateOrder, validateCreateItem } from '../utils/orderValidation.ts'
 
 // TODO allow listing by prices ascending, decreasing etc
 export const listAllItems = async (req: express.Request, res: express.Response) => {
@@ -58,13 +58,13 @@ export const createSellerParty = async (req: express.Request, res: express.Respo
 export const createOrder = async (req: express.Request, res: express.Response, next: express.NextFunction ) => {
     
     // ---input validation---
-    const validaitionErrors = validateCreateOrder(req.body);
+    const validationErrors = validateCreateOrder(req.body);
     
     // if errors occur
-    if (validaitionErrors.length > 0) {
+    if (validationErrors.length > 0) {
         const err: AppError = new Error("Invalid order data provided");
         err.type = "VALIDATION_ERROR";
-        err.details = validaitionErrors;
+        err.details = validationErrors;
 
         return next(err);
     }
@@ -107,17 +107,42 @@ export const createOrder = async (req: express.Request, res: express.Response, n
 
 };
 
-export const createItem = async (req: express.Request, res: express.Response) => {
-    const newItem = await prisma.item.create({
-        data: {
-            description: req.body.description,
-            name: req.body.name,
-            price: parseFloat(req.body.price),
-            sellerId: req.body.sellerId,
-        },
-    });
+export const createItem = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    
+    //---input validation---
+    const validationErrors = validateCreateItem(req.body);
+    
+    if (validationErrors.length > 0) {
+        const err: AppError = new Error("Invalid item data provided");
+        err.type = "VALIDATION_ERROR";
+        err.details = validationErrors;
+        return next(err);
+    }
 
-    res.status(201).json(newItem);
+
+    try {
+        const sellerExists = await prisma.sellerCustomerParty.count({ where: { id: req.body.sellerId }});
+
+        if (sellerExists === 0) {
+            const err: AppError = new Error("Seller not found");
+            err.type = "NOT_FOUND";
+            return next(err);
+        }
+
+        const newItem = await prisma.item.create({
+            data: {
+                description: req.body.description,
+                name: req.body.name,
+                price: req.body.price,
+                sellerId: req.body.sellerId,
+            },
+        });
+
+        res.status(201).json(newItem);
+        
+    } catch (error) {
+        next(error);
+    }
 }
 
 export const createBuyerParty = async (req: express.Request, res: express.Response) => {
