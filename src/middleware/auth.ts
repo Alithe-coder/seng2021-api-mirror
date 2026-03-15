@@ -20,7 +20,7 @@ export const authenticateToken = (req: express.Request, res: express.Response, n
 
     try {
         // check if token is not expired
-        const secret = ProcessingInstruction.env.JWT_SECRET || 'fallback_secret_for_local_dev';
+        const secret = process.env.JWT_SECRET || 'fallback_secret_for_local_dev';
         const decoded = jwt.verify(token, secret);
 
         // attach decoded userId

@@ -2,10 +2,11 @@
 import 'dotenv/config';
 import express from 'express';
 import orderRoutes from './routes/orderRoutes';
+import authRoutes from './routes/authRoutes';
 import { errorHandler } from './middleware/errorHandler'
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger';
-import authRoutes from './routes/authRoutes';
+import { authenticateToken } from './middleware/auth';
 
 const app = express();
 app.set('json spaces', 2);
@@ -16,7 +17,7 @@ app.use(express.json());
 
 app.use('/api/v1/auth', authRoutes);
 // we need to use /api/v1/orders everytime we are to do with orders
-app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/orders', authenticateToken, orderRoutes);
 
 // health check to see how the server is going 
 app.get('/api/v1/health', (req: express.Request, res: express.Response) => {
