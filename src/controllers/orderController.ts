@@ -5,13 +5,13 @@
 
 import express from 'express';
 import type { AppError } from '../middleware/errorHandler.ts';
-import { prisma } from '../db.ts';
+import { prisma } from '../db';
 import {
     validateCreateOrder,
     validateCreateItem,
     validateCreateParty,
     validateUpdateOrder
-} from '../utils/orderValidation.ts';
+} from '../utils/orderValidation';
 
 // ─── Items ────────────────────────────────────────────────────────────────────
 
