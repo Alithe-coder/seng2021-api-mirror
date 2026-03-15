@@ -50,3 +50,50 @@ export const registerUser = async (req: express.Request, res: express.Response, 
     next(error);
   }
 }
+
+
+
+// post /api/v1/auth/login
+
+export const loginUser = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  // same logic as register user
+  // error validation
+  const validationErrors = validateAuth(req.body);
+  if (validationErrors.length > 0) {
+    const err: AppError = new Error("Invalid login data");
+    err.type = "VALIDATION_ERROR";
+    err.details = validationErrors;
+    return next(err);
+  }
+
+  const { email, password } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      const err: AppError = new Error("Invalid email or password");
+      err.type = "UNAUTHORIZED";
+      return next(err);
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      const err: AppError = new Error("Invalid email or password");
+      err.type = "UNAUTHORIZED";
+      return next(err);
+    }
+
+    // generate the JWT - it expires in 1 hour - which is very nice
+    const secret = process.env.JWT_SECRET || 'fallback_secret_for_local_dev';
+    const token = jwt.sign({userId: user.id}, secret, {expiresIn: '1h'});
+
+    res.status(200).json({
+      message: "Login successful",
+      token: token
+    })
+  }
+  catch (error) {
+    next(error);
+  }
+
+};
