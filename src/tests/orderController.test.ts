@@ -24,6 +24,7 @@ beforeEach(() => jest.clearAllMocks());
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
 const makeRes = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = {} as any;
     res.status = jest.fn().mockReturnValue(res);
     res.json   = jest.fn().mockReturnValue(res);
