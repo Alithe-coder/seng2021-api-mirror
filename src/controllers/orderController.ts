@@ -6,7 +6,7 @@
 import express from 'express';
 import type { AppError } from '../middleware/errorHandler.ts';
 import { prisma } from '../db.ts';
-import { validateCreateOrder, validateCreateItem } from '../utils/orderValidation.ts'
+import { validateCreateOrder, validateCreateItem, validateCreateParty} from '../utils/orderValidation.ts'
 
 // TODO allow listing by prices ascending, decreasing etc
 export const listAllItems = async (req: express.Request, res: express.Response) => {
@@ -14,46 +14,7 @@ export const listAllItems = async (req: express.Request, res: express.Response) 
     res.status(200).json(allItems);
 }
 
-export const createSellerParty = async (req: express.Request, res: express.Response) => {
-    const dataReceived = req.body;
-    console.log(dataReceived);
-   
 
-    const newSeller = await prisma.sellerCustomerParty.create({
-        data: {
-            address: {
-                create: {
-                    streetNo: req.body.streetNo,
-                    streetName: req.body.streetName,
-                    postCode: req.body.postCode,
-                    suburbName: req.body.suburbName,
-                    stateName: req.body.stateName,
-                }
-            },
-            contact: {
-                create: {
-                    phoneNo: req.body.phoneNo,
-                    telefax: req.body.telefax,
-                    email: req.body.email
-                }
-            },
-            person: {
-                create: {
-                    firstName: req.body.firstName,
-                    surname: req.body.surname,
-                    jobTitle: req.body.jobTitle
-                }
-            },
-        },
-        include: {
-            address: true,
-            contact: true,
-            person: true,
-        }
-    });
-
-    res.status(201).json(newSeller);
-}
 
 export const createOrder = async (req: express.Request, res: express.Response, next: express.NextFunction ) => {
     
@@ -139,52 +100,108 @@ export const createItem = async (req: express.Request, res: express.Response, ne
         });
 
         res.status(201).json(newItem);
-        
+
     } catch (error) {
         next(error);
     }
 }
 
-export const createBuyerParty = async (req: express.Request, res: express.Response) => {
-    const dataReceived = req.body;
-    console.log(dataReceived);
+export const createBuyerParty = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
+    //---input validation----
+    const validationErrors = validateCreateParty(req.body);
 
-    const newBuyer = await prisma.buyerCustomerParty.create({
-        data: {
-            address: {
-                create: {
-                    streetNo: req.body.streetNo,
-                    streetName: req.body.streetName,
-                    postCode: req.body.postCode,
-                    suburbName: req.body.suburbName,
-                    stateName: req.body.stateName,
+    if (validationErrors.length > 0) {
+        const err: AppError = new Error("invalid buyer data provided");
+        err.type = "VALIDATION_ERROR";
+        err.details = validationErrors;
+        return next(err);
+    }
+
+    try {
+        const newBuyer = await prisma.buyerCustomerParty.create({
+            data: {
+                address: {
+                    create: {
+                        streetNo: req.body.streetNo,
+                        streetName: req.body.streetName,
+                        postCode: req.body.postCode,
+                        suburbName: req.body.suburbName,
+                        stateName: req.body.stateName,
+                    }
+                },
+                contact: {
+                    create: {
+                        phoneNo: req.body.phoneNo,
+                        telefax: req.body.telefax,
+                        email: req.body.email
+                    }
+                },
+                person: {
+                    create: {
+                        firstName: req.body.firstName,
+                        surname: req.body.surname,
+                        jobTitle: req.body.jobTitle
+                    }
                 }
             },
-            contact: {
-                create: {
-                    phoneNo: req.body.phoneNo,
-                    telefax: req.body.telefax,
-                    email: req.body.email
-                }
-            },
-            person: {
-                create: {
-                    firstName: req.body.firstName,
-                    surname: req.body.surname,
-                    jobTitle: req.body.jobTitle
-                }
-            }
-        },
-        include: {
-            address: true,
-            contact: true,
-            person: true
-        }
-    });
-
-    res.status(201).json(newBuyer);
+            include: {address: true,contact: true,person: true}
+        });
+        
+        res.status(201).json(newBuyer);
+    } catch (error) {
+        next(error);
+    }
 }
+
+export const createSellerParty = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    //---input validation----
+    const validationErrors = validateCreateParty(req.body);
+
+    if (validationErrors.length > 0) {
+        const err: AppError = new Error("invalid seller data provided");
+        err.type = "VALIDATION_ERROR";
+        err.details = validationErrors;
+        return next(err);
+    }
+
+    try {
+        const newSeller = await prisma.sellerCustomerParty.create({
+            data: {
+                address: {
+                    create: {
+                        streetNo: req.body.streetNo,
+                        streetName: req.body.streetName,
+                        postCode: req.body.postCode,
+                        suburbName: req.body.suburbName,
+                        stateName: req.body.stateName,
+                    }
+                },
+                contact: {
+                    create: {
+                        phoneNo: req.body.phoneNo,
+                        telefax: req.body.telefax,
+                        email: req.body.email
+                    }
+                },
+                person: {
+                    create: {
+                        firstName: req.body.firstName,
+                        surname: req.body.surname,
+                        jobTitle: req.body.jobTitle
+                    }
+                }
+            },
+            include: {address: true,contact: true,person: true}
+        });
+        
+        res.status(201).json(newSeller);
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 
 // GET /api/v1/orders - List orders using filters
 export const listOrders = (req: express.Request, res: express.Response) => {
