@@ -3,6 +3,8 @@ import 'dotenv/config';
 import express from 'express';
 import orderRoutes from './routes/orderRoutes.ts';
 import { errorHandler } from './middleware/errorHandler.ts'
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swagger.ts';
 
 const app = express();
 app.set('json spaces', 2);
@@ -28,6 +30,8 @@ app.get('/api/v1/health', (req: express.Request, res: express.Response) => {
         uptimeSeconds: Math.floor(process.uptime())
     })
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // this MUST be after any routes
 app.use(errorHandler);
