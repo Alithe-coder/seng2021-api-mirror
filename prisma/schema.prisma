@@ -141,3 +141,12 @@ model OrderCancel {
   cancelDate DateTime
   
 }
+
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // We will store the encrypted hash here, NEVER the real password!
+  name      String?
+  createdAt DateTime @default(now())
+}
