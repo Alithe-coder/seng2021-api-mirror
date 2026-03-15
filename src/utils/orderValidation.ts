@@ -83,8 +83,3 @@ export function validateCreateParty(body: unknown): validationError[] {
 
     return [];
 }
-
-
-// validate data for PUT
-
-// validate data for GET

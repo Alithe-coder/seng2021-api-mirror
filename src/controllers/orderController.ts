@@ -211,17 +211,33 @@ export const listOrders = (req: express.Request, res: express.Response) => {
 
 
 // GET /api/v1/orders/:orderId - Retreive
-export const getOrderById = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const { orderId } = req.params;
-    // test
-    if (orderId === "37") {
-        const err: AppError = new Error("No order exists with the provided ID");
-        err.type = "NOT_FOUND"; // This tells the middleware to use status 404
-        
-        return next(err); // Teleport to the Error Handler!
-    }
+export const getOrderById = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const orderId = req.params.orderId as string;
+    
+    try {
+        const order = await prisma.order.findUnique({
+            where: {id: orderId},
+            include: {
+                buyer: {
+                    include: {address: true,contact: true,person: true}
+                },
+                lines: {
+                    include: {item: true}
+                }
+            }
+        });
 
-    res.status(200).json({ message: `Order to be retrieved ${orderId}`});
+        if (!order) {
+            const err: AppError = new Error(`No order exists with the provided ID: ${orderId}`);
+            err.type = "NOT_FOUND"; // This tells the middleware to use status 404
+            return next(err); // Teleport to the Error Handler!
+        }
+        
+        res.status(200).json(order);
+    
+    } catch (error) {
+        next(error);
+    }
 };
 
 // PUT /api/v1/orders/:orderId - update
