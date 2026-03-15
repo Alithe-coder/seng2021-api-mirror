@@ -1,9 +1,9 @@
-// index.ts is the main file which will run everytime the Node server starts. ALl 
 import 'dotenv/config';
 import express from 'express';
-import orderRoutes from './routes/orderRoutes.ts';
+import orderRoutes from './routes/orderRoutes';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './swagger.ts';
+import { swaggerSpec } from './swagger';
+import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
 
@@ -29,5 +29,7 @@ app.get('/api/v1/health', (req, res) => {
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use(errorHandler);
 
 export default app;
