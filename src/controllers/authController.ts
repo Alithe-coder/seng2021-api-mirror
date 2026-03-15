@@ -85,7 +85,7 @@ export const loginUser = async (req: express.Request, res: express.Response, nex
 
     // generate the JWT - it expires in 1 hour - which is very nice
     const secret = process.env.JWT_SECRET || 'fallback_secret_for_local_dev';
-    const token = jwt.sign({userId: user.id}, secret, {expiresIn: '1h'});
+    const token = jwt.sign({userId: user.id}, secret, {expiresIn: '7d'});
 
     res.status(200).json({
       message: "Login successful",
