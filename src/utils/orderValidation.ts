@@ -83,3 +83,23 @@ export function validateCreateParty(body: unknown): validationError[] {
 
     return [];
 }
+
+
+const updateOrderSchema = z.object({
+    status: z.enum(["DRAFT", "SUBMITTED", "CANCELLED"], {
+        message: "status must be exactly 'DRAFT', 'SUBMITTED', or 'CANCELLED'"
+    })
+});
+
+export function validateUpdateOrder(body: unknown): validationError[] {
+    const result = updateOrderSchema.safeParse(body);
+
+    if (!result.success) {
+        return result.error.issues.map(issue => ({
+            field: issue.path.join('.'), // tells us which field failes
+            issue: issue.message // custom errors we wrote above
+        }));
+    }
+
+    return [];
+}

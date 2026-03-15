@@ -67,7 +67,8 @@ describe('Order controller unit tests', () => {
     } as unknown as express.Request;
     const res = mockResponse();
 
-    orderController.updateOrder(req, res);
+    const next = jest.fn();
+    orderController.updateOrder(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({

@@ -6,7 +6,12 @@
 import express from 'express';
 import type { AppError } from '../middleware/errorHandler.ts';
 import { prisma } from '../db.ts';
-import { validateCreateOrder, validateCreateItem, validateCreateParty} from '../utils/orderValidation.ts'
+import {
+    validateCreateOrder,
+    validateCreateItem,
+    validateCreateParty,
+    validateUpdateOrder
+} from '../utils/orderValidation.ts'
 
 // TODO allow listing by prices ascending, decreasing etc
 export const listAllItems = async (req: express.Request, res: express.Response) => {
@@ -241,9 +246,40 @@ export const getOrderById = async (req: express.Request, res: express.Response, 
 };
 
 // PUT /api/v1/orders/:orderId - update
-export const updateOrder = (req: express.Request, res: express.Response) => {
-    const { orderId } = req.params;
-    res.status(200).json({ message: `Order to be retrieved ${orderId}` });
+export const updateOrder = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const orderId = req.params.orderId as string;
+
+    const validationErrors = validateUpdateOrder(req.body);
+
+    if (validationErrors.length > 0) {
+        const err: AppError = new Error("Invalid update data provided");
+        err.type = "VALIDATION_ERROR";
+        err.details = validationErrors;
+        return next(err);
+    }
+
+    try {
+        const existingOrder = await prisma.order.findUnique({ where: { id: orderId } });
+        if (!existingOrder) {
+            const err: AppError = new Error(`No order exists with the ID: ${orderId}`);
+            err.type = "NOT_FOUND";
+            return next(err);
+        }
+
+        const updateOrder = await prisma.order.update({
+            where: {id: orderId},
+            data: {
+                status: req.body.status
+            },
+            include: {
+                lines: true
+            }
+        });
+        
+        res.status(200).json(updateOrder);
+    } catch (error) {
+        next(error);
+    }
 };
 
 // DELETE /api/v1/orders/:orderId - Delete
