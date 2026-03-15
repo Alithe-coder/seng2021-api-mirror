@@ -283,9 +283,33 @@ export const updateOrder = async (req: express.Request, res: express.Response, n
 };
 
 // DELETE /api/v1/orders/:orderId - Delete
-export const deleteOrder = (req: express.Request, res: express.Response) => {
-    //const { orderId } = req.params;
-    res.status(204).send();
+export const deleteOrder = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // make sure we delete order from orderline table first
+
+    const orderId = req.params.orderId as string;
+
+    try {
+        const existingOrder = await prisma.order.findUnique({ where: { id: orderId } });
+
+        if (!existingOrder) {
+            const err: AppError = new Error(`No order exists with the ID: ${orderId}`);
+            err.type = "NOT_FOUND";
+            return next(err);
+        }
+
+        await prisma.orderLine.deleteMany({
+            where: {orderId: orderId}
+        })
+
+        await prisma.order.delete({
+            where: {id:orderId}
+        })
+
+        res.status(204).send();
+
+    } catch (error) {
+        next(error);
+    }
 };
 
 // GET /api/v1/orders/:orderId/ubl - Export XML
