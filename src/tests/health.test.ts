@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../app.ts';
+import app from '../app';
 
 describe('Health endpoint', () => {
   test('GET /api/v1/health returns 200 and health info', async () => {
