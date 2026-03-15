@@ -4,7 +4,7 @@
 // "items" as an orderId and never reach the right handler.
 
 import { Router } from 'express';
-import * as orderController from '../controllers/orderController.ts';
+import * as orderController from '../controllers/orderController';
 
 const router = Router();
 
