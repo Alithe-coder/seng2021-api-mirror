@@ -2,27 +2,27 @@
 
 import * as orderController from '../controllers/orderController.ts';
 import { jest } from '@jest/globals';
+import express from 'express'
 
 describe('Order controller unit tests', () => {
-  const mockResponse = () => {
-    const res: any = {};
-    res.status = jest.fn().mockReturnValue(res);
-    res.json = jest.fn().mockReturnValue(res);
-    res.send = jest.fn().mockReturnValue(res);
-    return res;
-  };
+  const mockResponse = () => ({
+    status: jest.fn(),
+    json: jest.fn(),
+    send: jest.fn(),
+  } as unknown as express.Response);
 
   test('createOrder returns 201 with created order', async () => {
-    const req: any = {
+    const req = {
       body: {
         buyerName: 'Jason',
         item: 'Laptop',
         quantity: 2,
       },
-    };
+    } as unknown as express.Request;
     const res = mockResponse();
 
-    await orderController.createOrder(req, res);
+    const next = jest.fn();
+    await orderController.createOrder(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
@@ -34,9 +34,9 @@ describe('Order controller unit tests', () => {
   });
 
   test('listOrders returns 200 with filters', () => {
-    const req: any = {
+    const req = {
       query: { buyerName: 'Jason' },
-    };
+    } as unknown as express.Request;
     const res = mockResponse();
 
     orderController.listOrders(req, res);
@@ -49,12 +49,13 @@ describe('Order controller unit tests', () => {
   });
 
   test('getOrderById returns 200', () => {
-    const req: any = {
+    const req = {
       params: { orderId: '123' },
-    };
+    } as unknown as express.Request;
     const res = mockResponse();
 
-    orderController.getOrderById(req, res);
+    const next = jest.fn();
+    orderController.getOrderById(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
@@ -63,12 +64,13 @@ describe('Order controller unit tests', () => {
   });
 
   test('updateOrder returns 200', () => {
-    const req: any = {
+    const req = {
       params: { orderId: '123' },
-    };
+    } as unknown as express.Request;
     const res = mockResponse();
 
-    orderController.updateOrder(req, res);
+    const next = jest.fn();
+    orderController.updateOrder(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
@@ -77,19 +79,20 @@ describe('Order controller unit tests', () => {
   });
 
   test('deleteOrder returns 204', () => {
-    const req: any = {};
+    const req= {} as unknown as express.Request;
     const res = mockResponse();
 
-    orderController.deleteOrder(req, res);
+    const next = jest.fn();
+    orderController.deleteOrder(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(204);
     expect(res.send).toHaveBeenCalled();
   });
 
   test('generateUbl returns XML', () => {
-    const req: any = {
+    const req = {
       params: { orderId: '123' },
-    };
+    } as unknown as express.Request;
     const res = mockResponse();
 
     orderController.generateUbl(req, res);
