@@ -5,6 +5,7 @@ import orderRoutes from './routes/orderRoutes';
 import { errorHandler } from './middleware/errorHandler'
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger';
+import authRoutes from './routes/authRoutes';
 
 const app = express();
 app.set('json spaces', 2);
@@ -13,6 +14,7 @@ const port = 3000;
 // we need to ensure that our server can actuall read JSON
 app.use(express.json());
 
+app.use('/api/v1/auth', authRoutes);
 // we need to use /api/v1/orders everytime we are to do with orders
 app.use('/api/v1/orders', orderRoutes);
 
