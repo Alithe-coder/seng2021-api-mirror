@@ -60,10 +60,12 @@ export const swaggerSpec = swaggerJsDoc({
     },
     // The "Ultimate Lock-In" Pathing
     apis: [
-        path.join(process.cwd(), 'src/routes/*.ts'),
-        path.join(process.cwd(), 'routes/*.ts'),
-        path.join(process.cwd(), 'dist/routes/*.js'),
+        // This looks in every subfolder for any file ending in .ts or .js
+        './**/*.ts', 
+        './**/*.js',
+        // These are specific backups just in case
+        './routes/*.ts',
         './src/routes/*.ts',
-        './routes/*.ts'
+        './dist/routes/*.js'
     ],
 });
