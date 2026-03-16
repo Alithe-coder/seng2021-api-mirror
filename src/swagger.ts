@@ -62,9 +62,5 @@ export const swaggerSpec = swaggerJsDoc({
             },
         },
     },
-    apis: [
-    path.join(__dirname, './routes/*.js'), 
-    path.join(__dirname, './routes/*.ts'),
-    './src/routes/*.ts', // Backup glob
-],
+    apis: ['./src/routes/*.ts', './dist/routes/*.js', './routes/*.js'],
 });
