@@ -1,3 +1,4 @@
+import path from 'path';
 import swaggerJsDoc from 'swagger-jsdoc';
 
 export const swaggerSpec = swaggerJsDoc({
@@ -10,17 +11,17 @@ export const swaggerSpec = swaggerJsDoc({
         },
         servers: [
             {
-                url: 'http://localhost:3000',
+                url: 'https://seng2021-api-mirror.vercel.app', 
+                description: 'Vercel Production Server'
             },
-        ],
-        tags: [
-            { name: 'Orders',  description: 'Order creation and management' },
-            { name: 'Items',   description: 'Item creation and listing' },
-            { name: 'Parties', description: 'Buyer and seller party creation' },
+            {
+                url: 'http://localhost:3000',
+                description: 'Local Development'
+            },
         ],
         components: {
             schemas: {
-                // ── Reusable party input (buyer and seller share the same fields) ──
+                // This matches the schema you provided earlier
                 PartyInput: {
                     type: 'object',
                     required: [
@@ -29,24 +30,19 @@ export const swaggerSpec = swaggerJsDoc({
                         'firstName', 'surname', 'jobTitle',
                     ],
                     properties: {
-                        // Address
                         streetNo:   { type: 'string', example: '1' },
                         streetName: { type: 'string', example: 'Main Street' },
                         postCode:   { type: 'string', example: '2000' },
                         suburbName: { type: 'string', example: 'Sydney' },
                         stateName:  { type: 'string', example: 'NSW' },
-                        // Contact
                         phoneNo:    { type: 'string', example: '0400000000' },
                         telefax:    { type: 'string', example: '0200000000' },
                         email:      { type: 'string', format: 'email', example: 'contact@example.com' },
-                        // Person
                         firstName:  { type: 'string', example: 'Jason' },
                         surname:    { type: 'string', example: 'Dharmawan' },
-                        jobTitle:   { type: 'string', example: 'Billionare' },
+                        jobTitle:   { type: 'string', example: 'Billionaire' },
                     },
                 },
-
-                // ── Error response shape returned by errorHandler middleware ──
                 ErrorResponse: {
                     type: 'object',
                     properties: {
@@ -62,11 +58,12 @@ export const swaggerSpec = swaggerJsDoc({
             },
         },
     },
+    // The "Ultimate Lock-In" Pathing
     apis: [
         path.join(process.cwd(), 'src/routes/*.ts'),
         path.join(process.cwd(), 'routes/*.ts'),
         path.join(process.cwd(), 'dist/routes/*.js'),
-        './routes/*.ts',
-        './src/routes/*.ts'
+        './src/routes/*.ts',
+        './routes/*.ts'
     ],
 });
